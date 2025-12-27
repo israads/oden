@@ -19,261 +19,306 @@ Wizard interactivo que guía al usuario a crear un proyecto profesional siguiend
 
 Este wizard NO genera código. Genera la **documentación completa** que permitirá desarrollar con claridad.
 
-## Wizard Flow
+---
 
-### PASO 1: Información Básica
+## PASO 1: Entender el Objetivo
 
-Pregunta al usuario:
+El objetivo es entender QUÉ necesita el usuario para RECOMENDAR el stack correcto.
 
-**1.1 Nombre del Proyecto**
-Si no se proporcionó como argumento, preguntar:
+### 1.1 Nombre y Descripción
+
+Si no se proporcionó como argumento:
 - Nombre del proyecto (slug: lowercase, guiones)
-- Descripción breve (1-2 oraciones)
+- Descripción breve: "¿Qué problema resuelve tu producto?"
 
-**1.2 Tipo de Proyecto**
+### 1.2 Objetivo Principal del Producto
+
+**Pregunta:** "¿Cuál es el objetivo principal de tu producto para los usuarios?"
+
 Opciones:
-- **Web Application**: Frontend-focused (React, Next.js, Vue, Svelte)
-- **Mobile App**: iOS/Android (React Native, Flutter, Native)
-- **Backend/API**: Servicios y APIs (Node.js, Python, Go, Rust)
-- **Full-Stack**: Frontend + Backend integrado
-- **CLI Tool**: Herramienta de línea de comandos
+- **Descubrir contenido**: Blog, noticias, catálogo, landing pages (SEO crítico)
+- **Realizar transacciones**: Compras, reservas, pedidos, pagos
+- **Productividad/trabajo**: Dashboard, herramientas, gestión de datos
+- **Comunicación/social**: Chat, comunidad, red social
+- **Tracking/monitoreo**: Seguimiento de ubicación, métricas en tiempo real
+- **Servicio para sistemas**: API, microservicio, backend para terceros
 
-**1.3 Dominio/Industria**
-Opciones con ejemplos:
-- E-commerce / Retail
-- SaaS / B2B
-- FinTech / Pagos
-- Healthcare
-- Education
-- Social / Community
-- Productivity / Tools
-- Gaming
-- IoT / Hardware
-- Otro (especificar)
+### 1.3 Acceso Principal de Usuarios
 
----
+**Pregunta:** "¿Cómo accederán principalmente tus usuarios?"
 
-### PASO 2: Nivel de Experiencia
+Opciones:
+- **Navegador escritorio**: Desde computadora principalmente
+- **Navegador móvil**: Desde celular pero en browser
+- **App instalada**: Necesitan app en su teléfono
+- **Web + App**: Ambos canales son importantes
+- **Solo API**: No hay interfaz de usuario directa
 
-Adapta el nivel de detalle y enseñanza según experiencia:
+### 1.4 Funcionalidades Nativas (solo si eligió app o web+app)
 
-**2.1 ¿Cuál es tu nivel de experiencia?**
+**Pregunta:** "¿Necesitas alguna de estas funcionalidades del dispositivo?"
 
-- **Principiante** (0-2 años):
-  - Explicaciones detalladas de cada decisión
-  - Guías de System Design incluidas
-  - Recursos de aprendizaje en cada paso
-  - Más preguntas de validación
+Opciones (múltiple selección):
+- **Cámara/fotos frecuente**: Escanear, tomar fotos constantemente
+- **GPS en tiempo real**: Tracking de ubicación continuo
+- **Notificaciones push críticas**: Alertas que no pueden fallar
+- **Modo offline obligatorio**: Funcionar sin internet
+- **Sensores del dispositivo**: Acelerómetro, giroscopio, NFC
+- **Ninguna especial**: Funcionalidades estándar
 
-- **Intermedio** (2-5 años):
-  - Guías contextuales cuando sea relevante
-  - Mejores prácticas destacadas
-  - Balance entre guía y autonomía
+### 1.5 Actualizaciones de la App (solo si eligió app)
 
-- **Avanzado** (5+ años):
-  - Solo decisiones clave
-  - Flujo rápido
-  - Asume conocimiento de patrones
+**Pregunta:** "¿Qué tan frecuente necesitas actualizar la app?"
+
+Opciones:
+- **Muy frecuente**: Updates semanales, A/B testing, iteración rápida
+- **Normal**: Updates mensuales, proceso estándar de tiendas OK
+- **Poco frecuente**: App estable, pocos cambios
 
 ---
 
-### PASO 3: Scope del Proyecto
+## PASO 2: Recomendación de Stack
 
-**3.1 ¿MVP o Modo Turbo?**
+Basado en las respuestas, mostrar recomendación con justificación:
 
-Explica claramente las diferencias:
+### Matriz de Decisión
 
-**MVP (Minimum Viable Product)**
-- Timeline: 8-10 semanas
-- Features: 30-40% del producto final
-- Objetivo: Validar mercado rápidamente
-- Riesgo: Deuda técnica alta
-- Ideal para: Startups, validación de ideas
+```
+SI objetivo = "Descubrir contenido" Y acceso = web:
+  → Next.js + Supabase
+  → Razón: SSR para SEO, hosting en Vercel, DB y auth integrados
 
-**Modo Turbo**
-- Timeline: 14-20 semanas
-- Features: 100% profesional desde día 1
-- Objetivo: Producto enterprise-ready
-- Beneficio: +1000% más profesional
-- Ideal para: Productos establecidos, B2B
+SI objetivo = "Transacciones" Y acceso = "App instalada":
+  SI necesita_nativas_criticas (cámara frecuente, GPS tiempo real, sensores):
+    SI solo_iOS:
+      → Swift/SwiftUI + Supabase
+      → Razón: Máximo rendimiento y acceso a APIs nativas de iOS
+    SI solo_Android:
+      → Kotlin + Supabase
+      → Razón: Máximo rendimiento y acceso a APIs nativas de Android
+    SINO:
+      → Flutter + Supabase
+      → Razón: Nativo compilado, excelente acceso a hardware, una codebase
+  SINO:
+    → React Native + Expo + Supabase
+    → Razón: Updates OTA sin pasar por tiendas, desarrollo rápido, ecosistema React
 
-**3.2 Competidores a analizar**
+SI objetivo = "Transacciones" Y acceso = "Web + App":
+  SI updates_frecuentes:
+    → Next.js (PWA) + React Native/Expo + Supabase
+    → Razón: Web con PWA, app con OTA updates, backend compartido
+  SINO:
+    → Next.js + React Native + Supabase
+    → Razón: Código compartido donde sea posible, experiencias nativas
 
-Pide 3-5 competidores o productos similares para análisis competitivo.
+SI objetivo = "Productividad/trabajo":
+  → React + Supabase (o Next.js si necesita SEO)
+  → Razón: SPA rápida, sin necesidad de SSR, Supabase para auth y DB
 
----
+SI objetivo = "Comunicación/social":
+  SI acceso incluye app:
+    → React Native + Expo + Supabase (Realtime)
+    → Razón: Realtime de Supabase, push notifications, OTA updates
+  SINO:
+    → Next.js + Supabase (Realtime)
+    → Razón: WebSockets para chat, SEO para perfiles públicos
 
-### PASO 4: Requerimientos Técnicos
+SI objetivo = "Tracking/monitoreo":
+  → React Native + Expo + Supabase
+  → O Flutter si necesita sensores avanzados
+  → Razón: Acceso a GPS, background location, push notifications
 
-Basado en tipo de proyecto, hacer preguntas específicas:
+SI objetivo = "Servicio para sistemas":
+  → Node.js (Fastify/Express) + PostgreSQL
+  → O Python (FastAPI) + PostgreSQL
+  → Razón: API pura, sin frontend, escalable
+```
 
-#### Para Web/Full-Stack:
-
-**4.1 Frontend Framework**
-- React (Recommended para ecosistema amplio)
-- Next.js (React + SSR + API routes)
-- Vue.js (Curva de aprendizaje suave)
-- Svelte/SvelteKit (Performance, sintaxis simple)
-- Angular (Enterprise, TypeScript-first)
-
-**4.2 Styling**
-- Tailwind CSS (Recommended - utility-first)
-- CSS Modules
-- Styled Components
-- Sass/SCSS
-- UI Library (shadcn/ui, MUI, Chakra)
-
-**4.3 State Management**
-- React Context (Simple, built-in)
-- Zustand (Recommended - simple, performant)
-- Redux Toolkit (Complex state, time-travel)
-- Jotai/Recoil (Atomic state)
-- TanStack Query (Server state)
-
-#### Para Backend/API:
-
-**4.4 Backend Framework**
-- Node.js + Express (Flexible, grande ecosistema)
-- Node.js + Fastify (Performance)
-- Python + FastAPI (Recommended - modern, fast)
-- Python + Django (Batteries included)
-- Go + Gin/Echo (Performance, concurrency)
-- Rust + Actix/Axum (Maximum performance)
-
-**4.5 Database**
-- PostgreSQL (Recommended - versatile, reliable)
-- MySQL/MariaDB (Traditional, widely supported)
-- MongoDB (Document store, flexible schema)
-- SQLite (Simple, embedded)
-- Supabase (Postgres + Auth + Realtime)
-- PlanetScale (MySQL, serverless)
-
-**4.6 Authentication**
-- Supabase Auth (Recommended - simple, complete)
-- Auth0 (Enterprise, flexible)
-- Clerk (Modern, developer-friendly)
-- NextAuth.js (Next.js specific)
-- Custom JWT (Full control)
-
-#### Para Mobile:
-
-**4.7 Mobile Framework**
-- React Native (Recommended - web skills transfer)
-- Flutter (Performance, single codebase)
-- iOS Native (Swift/SwiftUI)
-- Android Native (Kotlin)
-- Expo (React Native simplified)
-
-**4.8 Backend para Mobile**
-- Supabase (Recommended - realtime, auth, storage)
-- Firebase (Google ecosystem)
-- AWS Amplify (AWS ecosystem)
-- Custom API
-
----
-
-### PASO 5: Features Clave
-
-**5.1 ¿Qué features son CRÍTICAS para v1?**
-
-Lista interactiva donde usuario marca:
-- [ ] Autenticación de usuarios
-- [ ] Roles y permisos
-- [ ] Dashboard/Admin panel
-- [ ] Pagos/Subscripciones
-- [ ] Notificaciones (email/push)
-- [ ] Búsqueda/Filtros
-- [ ] Exportación de datos
-- [ ] Multi-idioma
-- [ ] Modo offline
-- [ ] Real-time updates
-- [ ] Analytics/Métricas
-- [ ] API pública
-- Otras (especificar)
-
-**5.2 ¿Integraciones externas necesarias?**
-- Pasarelas de pago (Stripe, PayPal, MercadoPago)
-- Email (SendGrid, Resend, AWS SES)
-- Storage (S3, Cloudinary, Supabase Storage)
-- Maps (Google Maps, Mapbox)
-- AI/ML (OpenAI, Anthropic, Hugging Face)
-- Otras
-
----
-
-### PASO 6: Infraestructura
-
-**6.1 Hosting/Deployment**
-- Vercel (Recommended para Next.js)
-- Netlify (JAMstack)
-- Railway (Simple, databases included)
-- Render (Full-stack)
-- AWS (Enterprise, scalable)
-- GCP/Azure
-- Self-hosted
-
-**6.2 CI/CD**
-- GitHub Actions (Recommended)
-- GitLab CI
-- CircleCI
-- Ninguno por ahora
-
----
-
-### PASO 7: Resumen y Confirmación
-
-Muestra resumen completo de todas las decisiones:
+### Formato de Recomendación
 
 ```
 ╔══════════════════════════════════════════════════════════════╗
-║                    ODEN FORGE - RESUMEN                      ║
+║                 STACK RECOMENDADO                            ║
+╠══════════════════════════════════════════════════════════════╣
+║                                                              ║
+║  Basado en tus necesidades:                                  ║
+║  • Objetivo: {objetivo}                                      ║
+║  • Acceso: {acceso}                                          ║
+║  • Nativas: {funcionalidades}                                ║
+║                                                              ║
+║  TE RECOMENDAMOS:                                            ║
+║                                                              ║
+║  Frontend: {framework}                                       ║
+║  Backend:  Supabase (PostgreSQL + Auth + Realtime)          ║
+║  Hosting:  {plataforma}                                      ║
+║                                                              ║
+║  ¿POR QUÉ?                                                   ║
+║  {justificación específica}                                  ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+¿Aceptas esta recomendación o prefieres otro stack?
+1. Aceptar recomendación
+2. Quiero usar otro framework (especificar)
+3. Tengo dudas, explícame más
+```
+
+---
+
+## PASO 3: Nivel de Experiencia
+
+**Pregunta:** "¿Cuál es tu nivel de experiencia con este stack?"
+
+- **Principiante** (primera vez con estas tecnologías):
+  - Explicaciones detalladas de cada decisión
+  - Guías de System Design incluidas
+  - Recursos de aprendizaje en cada paso
+
+- **Intermedio** (he usado tecnologías similares):
+  - Guías contextuales cuando sea relevante
+  - Mejores prácticas destacadas
+
+- **Avanzado** (domino este stack):
+  - Flujo rápido, solo decisiones clave
+  - Sin explicaciones básicas
+
+---
+
+## PASO 4: Scope del Proyecto
+
+### 4.1 MVP vs Modo Turbo
+
+**Pregunta:** "¿Cuál es tu estrategia de lanzamiento?"
+
+**MVP (Minimum Viable Product)**
+- Timeline: 6-8 semanas
+- Features: 30-40% del producto final
+- Objetivo: Validar idea rápidamente
+- Ideal para: Startups, validación de mercado
+
+**Modo Completo**
+- Timeline: 12-16 semanas
+- Features: 100% profesional desde día 1
+- Objetivo: Producto enterprise-ready
+- Ideal para: Productos B2B, mercados establecidos
+
+### 4.2 Competidores
+
+**Pregunta:** "Nombra 2-3 productos similares o competidores"
+
+Esto nos ayudará en el análisis competitivo posterior.
+
+---
+
+## PASO 5: Features Clave para V1
+
+**Pregunta:** "¿Qué features son CRÍTICAS para tu primera versión?"
+
+Mostrar opciones relevantes según el objetivo:
+
+### Para Transacciones/E-commerce:
+- [ ] Catálogo de productos
+- [ ] Carrito de compras
+- [ ] Checkout y pagos
+- [ ] Historial de pedidos
+- [ ] Notificaciones de estado
+
+### Para Productividad:
+- [ ] Dashboard principal
+- [ ] CRUD de entidades
+- [ ] Reportes/exportación
+- [ ] Roles y permisos
+- [ ] Búsqueda y filtros
+
+### Para Social/Comunicación:
+- [ ] Perfiles de usuario
+- [ ] Feed/timeline
+- [ ] Mensajería/chat
+- [ ] Notificaciones
+- [ ] Seguir/amigos
+
+### Para Tracking:
+- [ ] Mapa en tiempo real
+- [ ] Historial de ubicaciones
+- [ ] Alertas por zona
+- [ ] Reportes de actividad
+
+### Comunes a todos:
+- [ ] Autenticación (email, social)
+- [ ] Perfil de usuario
+- [ ] Configuraciones
+- [ ] Soporte/ayuda
+
+---
+
+## PASO 6: Integraciones
+
+**Pregunta:** "¿Necesitas integrar con servicios externos?"
+
+- **Pagos**: Stripe, MercadoPago, PayPal
+- **Email**: Resend, SendGrid
+- **Storage**: Supabase Storage, Cloudinary, S3
+- **Maps**: Google Maps, Mapbox
+- **AI**: OpenAI, Anthropic, Gemini
+- **Analytics**: Mixpanel, Amplitude, PostHog
+- **Ninguna por ahora**
+
+---
+
+## PASO 7: Resumen y Confirmación
+
+```
+╔══════════════════════════════════════════════════════════════╗
+║                    RESUMEN DEL PROYECTO                      ║
 ╠══════════════════════════════════════════════════════════════╣
 ║ Proyecto: {nombre}                                           ║
-║ Tipo: {tipo}                                                 ║
-║ Dominio: {dominio}                                           ║
-║ Scope: {mvp/turbo}                                           ║
+║ Descripción: {descripción}                                   ║
+║ Scope: {MVP/Completo} ({X semanas})                         ║
 ╠══════════════════════════════════════════════════════════════╣
-║ STACK TECNOLÓGICO                                            ║
+║ STACK                                                        ║
 ║ ├─ Frontend: {framework}                                     ║
-║ ├─ Backend: {framework}                                      ║
+║ ├─ Backend: {backend}                                        ║
 ║ ├─ Database: {db}                                            ║
 ║ ├─ Auth: {auth}                                              ║
 ║ └─ Hosting: {hosting}                                        ║
 ╠══════════════════════════════════════════════════════════════╣
 ║ FEATURES V1                                                  ║
-║ {lista de features seleccionadas}                            ║
+║ {lista de features}                                          ║
+╠══════════════════════════════════════════════════════════════╣
+║ INTEGRACIONES                                                ║
+║ {lista de integraciones}                                     ║
 ╠══════════════════════════════════════════════════════════════╣
 ║ COMPETIDORES A ANALIZAR                                      ║
-║ {lista de competidores}                                      ║
+║ {lista}                                                      ║
 ╚══════════════════════════════════════════════════════════════╝
-```
 
-Preguntar: "¿Confirmas estas decisiones para comenzar?"
+¿Confirmas para crear la estructura del proyecto?
+```
 
 ---
 
 ## PASO 8: Generación de Estructura
 
-Una vez confirmado, crear:
+Una vez confirmado:
 
-### 8.1 Estructura de Directorios
+### 8.1 Crear Directorios
 
 ```bash
-mkdir -p {proyecto}/docs/{guides,reference/modules,development/{current,completed},archived,temp}
-mkdir -p {proyecto}/.claude/{commands,scripts,agents,rules,context}
+mkdir -p docs/{guides,reference/modules,development/{current,completed},archived,temp}
+mkdir -p .claude/{commands,scripts,rules,context}
 ```
 
-### 8.2 Archivos Iniciales
-
-Crear estos archivos con contenido inicial:
+### 8.2 Crear Archivos Iniciales
 
 1. **docs/README.md** - Índice de documentación
-2. **docs/reference/technical-decisions.md** - Template con secciones vacías
+2. **docs/reference/technical-decisions.md** - Con decisiones del wizard
 3. **docs/reference/competitive-analysis.md** - Template
 4. **docs/reference/implementation-plan.md** - Template
 5. **CLAUDE.md** - Instrucciones del proyecto
 
-### 8.3 Contenido de technical-decisions.md (Template)
+### 8.3 Contenido de technical-decisions.md
+
+Generar con las decisiones tomadas:
 
 ```markdown
 # Technical Decisions - {Proyecto}
@@ -285,15 +330,14 @@ Crear estos archivos con contenido inicial:
 
 ## 1. Visión General
 
-### 1.1 Descripción del Proyecto
-{descripción}
+### 1.1 Descripción
+{descripción del usuario}
 
-### 1.2 Objetivos Principales
-- [ ] Objetivo 1
-- [ ] Objetivo 2
+### 1.2 Objetivo Principal
+{objetivo seleccionado}
 
 ### 1.3 Scope
-**Modalidad:** {MVP/Modo Turbo}
+**Modalidad:** {MVP/Completo}
 **Timeline estimado:** {X semanas}
 
 ---
@@ -302,196 +346,137 @@ Crear estos archivos con contenido inicial:
 
 ### 2.1 Frontend
 - **Framework:** {selección}
-- **Justificación:** {por qué}
-- **Alternativas consideradas:** {otras opciones}
+- **Justificación:** {razón de la recomendación}
 
 ### 2.2 Backend
-- **Framework:** {selección}
-- **Justificación:** {por qué}
+- **Plataforma:** {Supabase/otro}
+- **Database:** PostgreSQL
+- **Auth:** {método}
 
-### 2.3 Base de Datos
-- **Sistema:** {selección}
-- **Justificación:** {por qué}
-
-### 2.4 Autenticación
-- **Solución:** {selección}
-- **Justificación:** {por qué}
-
-### 2.5 Hosting/Infraestructura
-- **Plataforma:** {selección}
-- **Justificación:** {por qué}
+### 2.3 Hosting
+- **Plataforma:** {Vercel/Expo/etc}
+- **Justificación:** {razón}
 
 ---
 
-## 3. Arquitectura
+## 3. Features V1
 
-### 3.1 Diagrama de Alto Nivel
-[Pendiente: Crear con Technical Architect]
-
-### 3.2 Patrones de Diseño
-[Pendiente: Definir patrones]
-
-### 3.3 Estructura de Carpetas
-[Pendiente: Definir estructura]
+{lista de features seleccionadas con checkboxes}
 
 ---
 
-## 4. Schema de Base de Datos
+## 4. Integraciones
 
-### 4.1 Entidades Principales
-[Pendiente: Definir con Technical Architect]
-
-### 4.2 Relaciones
-[Pendiente]
-
-### 4.3 Índices
-[Pendiente]
+{lista de integraciones}
 
 ---
 
-## 5. API Design
+## 5. Competidores a Analizar
 
-### 5.1 Endpoints Principales
-[Pendiente: Definir con Technical Architect]
-
-### 5.2 Autenticación de API
-[Pendiente]
+{lista de competidores}
 
 ---
 
-## 6. Features por Fase
+## 6. Arquitectura
 
-### Fase 1 (Semanas 1-4)
-{features críticas}
-
-### Fase 2 (Semanas 5-8)
-{features secundarias}
-
-### Fase 3+
-{features futuras}
+[Pendiente: Completar con /oden:architect]
 
 ---
 
-## 7. Dependencias
+## 7. Schema de Base de Datos
 
-### 7.1 Dependencias de Producción
-[Pendiente]
-
-### 7.2 Dependencias de Desarrollo
-[Pendiente]
+[Pendiente: Completar con /oden:architect]
 
 ---
 
-## 8. Consideraciones de Seguridad
+## 8. Próximos Pasos
 
-[Pendiente: Definir con Technical Architect]
-
----
-
-## 9. Performance Targets
-
-- Latencia API: < 100ms
-- Time to Interactive: < 3s
-- Lighthouse Score: > 90
-
----
-
-## 10. Próximos Pasos
-
-1. [ ] Completar análisis competitivo (/oden:analyze)
-2. [ ] Detallar arquitectura (/oden:architect)
-3. [ ] Crear especificaciones de módulos (/oden:spec)
-4. [ ] Crear plan de implementación (/oden:plan)
+1. [ ] /oden:architect - Completar arquitectura y schema
+2. [ ] /oden:analyze - Análisis competitivo
+3. [ ] /oden:spec [módulo] - Especificaciones detalladas
+4. [ ] /oden:plan - Plan de implementación
+5. [ ] /oden:checklist - Verificar antes de codificar
 
 ---
 
 **Creado:** {fecha}
-**Autor:** Oden Forge Wizard
+**Generado por:** Oden Forge Wizard
 ```
 
 ---
 
 ## PASO 9: Siguiente Acción
 
-Mostrar guía de próximos pasos:
-
 ```
 ╔══════════════════════════════════════════════════════════════╗
 ║              ✅ PROYECTO INICIALIZADO                        ║
 ╠══════════════════════════════════════════════════════════════╣
 ║                                                              ║
-║  Tu proyecto {nombre} está listo para diseñar.               ║
+║  Proyecto: {nombre}                                          ║
+║  Stack: {resumen del stack}                                  ║
 ║                                                              ║
-║  PRÓXIMOS PASOS (en orden):                                  ║
+║  ARCHIVOS CREADOS:                                           ║
+║  • docs/reference/technical-decisions.md                     ║
+║  • docs/reference/competitive-analysis.md                    ║
+║  • docs/reference/implementation-plan.md                     ║
+║  • CLAUDE.md                                                 ║
 ║                                                              ║
-║  1. /oden:architect                                          ║
-║     → Completa technical-decisions.md                        ║
-║     → Define schema de BD completo                           ║
-║     → Diseña arquitectura detallada                          ║
+║  PRÓXIMO PASO:                                               ║
 ║                                                              ║
-║  2. /oden:analyze                                            ║
-║     → Analiza competidores                                   ║
-║     → Define user stories                                    ║
-║     → Identifica diferenciadores                             ║
+║  /oden:architect                                             ║
 ║                                                              ║
-║  3. /oden:spec [módulo]                                      ║
-║     → Crea specs de 800-1200 líneas por módulo               ║
-║     → Define máquinas de estado                              ║
-║     → Documenta edge cases                                   ║
-║                                                              ║
-║  4. /oden:plan                                               ║
-║     → Plan semana por semana                                 ║
-║     → Define milestones                                      ║
-║     → Identifica dependencias                                ║
-║                                                              ║
-║  5. /oden:checklist                                          ║
-║     → Verifica que TODO esté documentado                     ║
-║     → Solo entonces, empieza a codificar                     ║
+║  Esto completará:                                            ║
+║  • Arquitectura detallada                                    ║
+║  • Schema de base de datos                                   ║
+║  • Estructura de carpetas del código                         ║
+║  • Patrones de diseño a usar                                 ║
 ║                                                              ║
 ╚══════════════════════════════════════════════════════════════╝
 ```
 
 ---
 
-## Comportamiento según Nivel de Experiencia
+## Comportamiento según Nivel
 
 ### Para Principiantes
 
-En cada paso, incluir:
-- **Por qué importa**: Explicación de la decisión
-- **Trade-offs**: Pros y contras de cada opción
-- **Recursos**: Links a documentación/tutoriales
-- **System Design tip**: Concepto relevante de arquitectura
+Después de la recomendación de stack, explicar:
 
-Ejemplo:
 ```
-💡 SYSTEM DESIGN TIP:
-PostgreSQL vs MongoDB - ¿Cuándo usar cada uno?
+💡 ¿POR QUÉ ESTE STACK?
 
-PostgreSQL (relacional):
-- Datos estructurados con relaciones claras
-- Transacciones ACID importantes
-- Queries complejos frecuentes
+React Native + Expo:
+• React Native te permite crear apps iOS y Android con JavaScript
+• Expo simplifica el proceso: no necesitas Xcode ni Android Studio para empezar
+• OTA Updates: puedes actualizar tu app sin pasar por las tiendas
+• Gran comunidad y documentación
 
-MongoDB (documentos):
-- Schema flexible, cambia frecuentemente
-- Datos jerárquicos/anidados
-- Horizontal scaling prioritario
+Supabase:
+• Es como Firebase pero con PostgreSQL (base de datos relacional)
+• Incluye: Base de datos, Autenticación, Storage, Realtime
+• Tier gratuito generoso para empezar
+• Dashboard visual para ver tus datos
 
-Para tu proyecto tipo {tipo}, PostgreSQL es mejor porque...
+¿Quieres que te explique más sobre alguna tecnología?
 ```
 
-### Para Intermedios
+### Para Intermedios/Avanzados
 
-- Tips contextuales solo cuando sean relevantes
-- Mejores prácticas en cada sección
-- Sin explicaciones básicas
+Solo mostrar la recomendación y justificación breve, sin explicaciones básicas.
 
-### Para Avanzados
+---
 
-- Flujo directo de preguntas
-- Sin explicaciones adicionales
-- Asume conocimiento de trade-offs
+## Stacks Predefinidos (Referencia Rápida)
+
+| Caso de Uso | Stack | Hosting |
+|-------------|-------|---------|
+| Web con SEO | Next.js + Supabase | Vercel |
+| Web SPA (dashboard) | React + Supabase | Vercel/Netlify |
+| Mobile (updates frecuentes) | React Native + Expo + Supabase | Expo EAS |
+| Mobile (nativo crítico) | Flutter + Supabase | App Stores |
+| Mobile iOS only | Swift + Supabase | App Store |
+| Web + Mobile | Next.js + React Native + Supabase | Vercel + Expo |
+| API/Backend only | Node.js/Python + PostgreSQL | Railway/Render |
 
 ---
 
@@ -499,23 +484,12 @@ Para tu proyecto tipo {tipo}, PostgreSQL es mejor porque...
 
 ### Si el directorio ya existe:
 ```
-⚠️ El directorio {nombre} ya existe.
+⚠️ Ya existe un proyecto en este directorio.
 ¿Qué deseas hacer?
-1. Sobrescribir (perderás contenido existente)
-2. Usar otro nombre
+1. Continuar con el proyecto existente
+2. Usar otro directorio
 3. Cancelar
 ```
 
-### Si falta información crítica:
-No avanzar al siguiente paso hasta tener respuesta válida.
-
----
-
-## Output Final
-
-Al completar exitosamente:
-1. Directorio del proyecto creado
-2. Estructura docs/ completa
-3. Templates de documentación listos
-4. CLAUDE.md configurado
-5. Guía de próximos pasos mostrada
+### Si el usuario rechaza la recomendación:
+Preguntar qué stack prefiere y por qué, luego adaptar el flujo.
