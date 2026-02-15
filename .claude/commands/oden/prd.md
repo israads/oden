@@ -1,134 +1,344 @@
 ---
-allowed-tools: Bash, Read, Write, LS
-description: Crear PRD con brainstorming inteligente (nativo, sin CCPM)
+allowed-tools: Bash, Read, Write, Task
+description: Crear PRD con brainstorming inteligente usando subagentes especializados - optimizado para contexto
 ---
 
-# PRD - Product Requirements Document
+# PRD - Product Requirements Document with Orchestrated Subagents
 
-Crea un PRD completo con brainstorming inteligente y contexto del proyecto.
+Crea un PRD completo con **investigación inteligente y brainstorming optimizado** usando subagentes especializados para máximo contexto.
 
 ## Usage
 ```
 /oden:prd <feature_name>
 ```
 
-## Preflight
+## 🔄 New Architecture: Multi-Agent Research & Brainstorming
 
-Silently validate:
+### Problema Resuelto
+- ❌ **Antes**: Una sesión hace research + brainstorming + writing (10,000+ tokens)
+- ✅ **Ahora**: 3 fases con investigación paralela + brainstorming contextual
 
-1. **Feature name**: Must be kebab-case (lowercase, numbers, hyphens, starts with letter).
+### Arquitectura de 3 Fases
+
+```
+PHASE 1: Research (Parallel) 🟢
+├─ competitive-researcher → Investigate 3-5 competitors
+├─ context-analyzer → Scan existing PRDs + technical decisions
+└─ domain-researcher → Market research + user insights
+
+PHASE 2: Brainstorming (Interactive) 🔵
+└─ prd-interviewer → Smart questions based on research
+
+PHASE 3: Assembly (Main Session) 🟡
+└─ prd-assembler → Create coherent PRD document
+```
+
+## Preflight (Quick Validation)
+
+1. **Feature name**: Must be kebab-case (lowercase, numbers, hyphens, starts with letter)
    - If invalid: "Feature name must be kebab-case. Examples: user-auth, payment-v2"
-
-2. **Existing PRD**: Check `.claude/prds/$ARGUMENTS.md`
-   - If exists, ask to overwrite
-
+2. **Existing PRD**: Check `.claude/prds/$ARGUMENTS.md` - if exists, ask to overwrite
 3. **Directory**: Create `.claude/prds/` if needed
 
-## Context Gathering
+## Phase 1: Parallel Research 🔍
 
-Before brainstorming, silently scan for project context:
+Launch **3 specialized subagents in parallel** for comprehensive market and technical research:
 
-1. **Technical context** (if available):
-   - Read `docs/reference/technical-decisions.md` for stack/architecture
-   - Read `docs/reference/competitive-analysis.md` for market context
-   - Read any existing module specs in `docs/reference/modules/`
+### 1.1 Competitive Researcher
+```markdown
+Launch subagent: search-specialist
 
-2. **Existing PRDs**: Scan `.claude/prds/` for related features
-   - Identify potential overlaps or dependencies
+Task: Research competitive landscape and best practices
 
-3. **Project CLAUDE.md**: Read for project conventions
+Requirements:
+- Find and analyze 3-5 relevant competitors for $ARGUMENTS feature
+- Document their approach, user flows, key features
+- Identify gaps, opportunities, and differentiation points
+- Research industry best practices and standards
+- Note pricing models, user feedback, and success metrics
+- Output: Competitive analysis with actionable insights
 
-This context informs smarter questions and better PRD quality.
+Context: Focus on practical implementation lessons, not just feature lists
+```
 
-## Brainstorming Session
+### 1.2 Context Analyzer
+```markdown
+Launch subagent: technical-researcher
 
-You are a product manager creating a PRD for: **$ARGUMENTS**
+Task: Analyze existing project context and related work
 
-### Smart Questions
-Ask 3-5 focused questions based on project context. Adapt questions to what you already know:
+Requirements:
+- Read docs/reference/technical-decisions.md for stack/architecture constraints
+- Scan .claude/prds/ for related features and potential overlaps
+- Read project CLAUDE.md for conventions and methodologies
+- Identify existing technical patterns to leverage
+- Check for integration points with existing features
+- Output: Project context summary with technical constraints
 
-- If technical-decisions.md exists: Skip stack questions, focus on feature-specific concerns
-- If competitive-analysis exists: Reference competitors in questions
-- If related PRDs exist: Ask about integration/overlap
+Context: Ensure new PRD aligns with existing technical and product strategy
+```
 
-**Question areas:**
-- Problem: What specific user pain does this solve?
-- Users: Who benefits most? (reference existing personas if available)
-- Scope: What's MVP vs full vision?
-- Constraints: Timeline, budget, technical limitations?
-- Success: How do we measure this worked?
+### 1.3 Domain Researcher
+```markdown
+Launch subagent: data-analyst
 
-### PRD Creation
+Task: Research market trends, user needs, and success metrics
 
-After gathering answers, create the PRD.
+Requirements:
+- Research market size, trends, and growth for $ARGUMENTS domain
+- Identify target user personas and their pain points
+- Find industry benchmarks and success metrics
+- Research regulatory/compliance requirements if applicable
+- Identify technical challenges and solutions in the domain
+- Output: Market research with user insights and success criteria
 
-#### File: `.claude/prds/$ARGUMENTS.md`
+Context: Ground PRD in real market data and user needs
+```
+
+## Phase 2: Smart Brainstorming Session 💡
+
+Use research results to conduct focused, intelligent brainstorming:
+
+### 2.1 Contextual PRD Interviewer
+```markdown
+You are a product manager conducting a smart brainstorming session for: **$ARGUMENTS**
+
+Based on the research phase results:
+- Competitive landscape: [insights from competitive-researcher]
+- Technical context: [constraints from context-analyzer]
+- Market research: [trends from domain-researcher]
+
+### Adaptive Smart Questions
+
+Ask 3-5 focused questions that leverage research insights:
+
+**If competitive analysis found gaps:**
+- "Competitors X and Y both struggle with [specific issue]. How should we solve this differently?"
+
+**If technical constraints exist:**
+- "Given our [existing stack/architecture], what's the most feasible approach for [key feature]?"
+
+**If market research shows trends:**
+- "[Market trend] is growing 40% YoY. How do we position against this opportunity?"
+
+**Core question areas (adapt based on research):**
+- **Problem**: What specific user pain does this solve? (reference research findings)
+- **Users**: Who benefits most? (use personas from domain research)
+- **Scope**: What's MVP vs full vision? (informed by competitive analysis)
+- **Constraints**: Timeline, budget, technical limitations? (from context analysis)
+- **Success**: How do we measure this worked? (use industry benchmarks)
+
+### Question Guidelines:
+- Reference specific research findings in questions
+- Don't ask about things already known from technical-decisions.md
+- Focus on decisions that research couldn't answer
+- Keep total questions to 3-5 for focused session
+
+Context: Use research to ask smarter, more targeted questions
+```
+
+## Phase 3: PRD Assembly 📋
+
+Main session synthesizes all research and brainstorming into comprehensive PRD:
+
+### PRD Document Structure
+
+Create `.claude/prds/$ARGUMENTS.md`:
 
 ```markdown
 ---
 name: $ARGUMENTS
-description: [One-line summary]
+description: [One-line summary from brainstorming]
 status: backlog
-created: [Real datetime from: date -u +"%Y-%m-%dT%H:%M:%SZ"]
+created: [Real datetime: date -u +"%Y-%m-%dT%H:%M:%SZ"]
+competitive_analysis: true
+market_research: true
+subagents_used: competitive-researcher, context-analyzer, domain-researcher, prd-interviewer
 ---
 
 # PRD: $ARGUMENTS
 
-## Executive Summary
-[Value proposition and brief overview]
+## 📊 Executive Summary
+[Value proposition and brief overview based on research and brainstorming]
 
-## Problem Statement
-[What problem, why now, evidence/data]
+## 🎯 Problem Statement
+[What problem, why now, evidence from market research]
 
-## User Stories
-[Personas, journeys, acceptance criteria per story]
+### Market Context
+[From domain-researcher: market size, trends, growth]
 
-## Requirements
+### Competitive Landscape
+[From competitive-researcher: key players, gaps, opportunities]
+
+## 👥 User Stories & Personas
+[From brainstorming session informed by domain research]
+
+### Primary Personas
+[Based on domain research and brainstorming]
+
+### User Journeys
+[Informed by competitive analysis of successful flows]
+
+### Acceptance Criteria
+[Specific, testable criteria per story]
+
+## ⚙️ Requirements
 
 ### Functional Requirements
 [Core features with clear acceptance criteria]
 
+#### Inspired by Competitive Analysis:
+[Features/patterns learned from competitive research]
+
+#### Technical Integration Points:
+[From context-analyzer: how this connects to existing system]
+
 ### Non-Functional Requirements
 [Performance, security, scalability, accessibility]
 
-## Success Criteria
-[Measurable KPIs and metrics]
+#### Industry Standards:
+[Benchmarks from market research]
 
-## Constraints & Assumptions
-[Technical, timeline, resource limitations]
+#### Technical Constraints:
+[From context-analyzer: stack limitations, existing patterns]
 
-## Out of Scope
-[What we explicitly won't build]
+## 📈 Success Criteria
+[Measurable KPIs from market research + brainstorming]
 
-## Dependencies
-[External and internal dependencies]
+### Industry Benchmarks:
+[From domain research: what "good" looks like]
+
+### Business Metrics:
+[Revenue, user adoption, engagement targets]
+
+### Technical Metrics:
+[Performance, reliability, scalability targets]
+
+## 🚧 Constraints & Assumptions
+
+### Technical Constraints:
+[From context-analyzer: stack, architecture, integration limitations]
+
+### Market Constraints:
+[From domain research: regulatory, competitive, timeline factors]
+
+### Resource Constraints:
+[From brainstorming: budget, timeline, team limitations]
+
+## ❌ Out of Scope
+[What we explicitly won't build - informed by competitive analysis]
+
+### Competitive Features We're Skipping:
+[Features competitors have that we're intentionally not building]
+
+### Future Considerations:
+[Features that might be added in later versions]
+
+## 🔗 Dependencies
+
+### Internal Dependencies:
+[From context-analyzer: other PRDs, shared systems, technical components]
+
+### External Dependencies:
+[Third-party services, APIs, data sources identified in research]
+
+## 💡 Research Insights
+
+### Competitive Intelligence:
+[Key learnings from competitive analysis that influenced decisions]
+
+### Market Opportunities:
+[Specific opportunities identified in domain research]
+
+### Technical Considerations:
+[Architecture insights from context analysis]
+
+## 📋 Next Steps
+1. Review PRD with stakeholders for completeness
+2. Create technical epic: `/oden:epic $ARGUMENTS`
+3. Begin implementation planning
 ```
 
-## Quality Checks
+## 📊 Quality Checks & Output
 
-Before saving, verify:
-- All sections complete (no placeholders)
-- User stories have acceptance criteria
-- Success criteria are measurable
-- Out of scope is explicit
+Before completion, verify:
+- [ ] All research insights properly incorporated
+- [ ] User stories have acceptance criteria based on competitive learnings
+- [ ] Success criteria use industry benchmarks from research
+- [ ] Technical constraints from existing system acknowledged
+- [ ] No research findings ignored or contradicted
+- [ ] Competitive differentiation clearly articulated
 
-## Output
+## Success Output
 
 ```
-PRD created: .claude/prds/$ARGUMENTS.md
+🎉 PRD created with comprehensive research: .claude/prds/$ARGUMENTS.md
 
-Summary:
-  - [problem in one sentence]
-  - [number] user stories
-  - [number] functional requirements
-  - [key constraint]
+📊 Research Summary:
+  Phase 1: Competitive + Context + Domain research (parallel) ✅
+  Phase 2: Smart brainstorming with research context ✅
+  Phase 3: Research-informed PRD assembly ✅
 
-Next: /oden:epic $ARGUMENTS
+🔍 Research Insights Applied:
+  - Competitive analysis: [X] competitors analyzed
+  - Market research: [industry trends, user personas, benchmarks]
+  - Technical context: [integration points, constraints identified]
+  - Smart questions: [Y] targeted questions based on research
+
+📋 PRD Summary:
+  - Problem: [one sentence from brainstorming]
+  - Users: [personas from domain research]
+  - Requirements: [count] functional + [count] non-functional
+  - Success metrics: [key benchmarks from market research]
+  - Differentiation: [competitive advantage identified]
+
+💡 Context Optimization:
+  - Previous: Single session research + brainstorming (~10,000 tokens)
+  - Current: Parallel research + focused brainstorming (~4,000 tokens total)
+  - Quality: Multiple specialized perspectives + market intelligence
+  - Decisions: Research-backed rather than assumption-based
+
+Next Steps:
+  1. Review PRD for stakeholder alignment
+  2. Run: /oden:epic $ARGUMENTS (convert to technical implementation plan)
+  3. Share competitive insights with product team
 ```
 
-## Important
+## 🔧 Implementation Notes
 
-- Get REAL datetime: `date -u +"%Y-%m-%dT%H:%M:%SZ"`
-- Never use placeholder dates
-- Leverage existing project context for smarter brainstorming
-- Keep brainstorming focused (3-5 questions, not 10+)
+### Error Handling
+- If competitive research finds <3 competitors → expand search terms or adjacent markets
+- If no technical context available → proceed with generic technical considerations
+- If domain research limited → focus on user interviews and surveys in brainstorming
+
+### Research Quality Gates
+- Competitive analysis must find ≥3 relevant examples
+- Market research should include quantitative data where available
+- Technical context should identify ≥1 integration point or constraint
+
+### Brainstorming Optimization
+- Questions adapt based on research quality and findings
+- If research is comprehensive, focus questions on decisions and tradeoffs
+- If research is limited, ask broader exploratory questions
+
+### Subagent Selection Logic
+```yaml
+competitive-researcher: search-specialist (expert web research, comparative analysis)
+context-analyzer: technical-researcher (reads technical docs, understands architecture)
+domain-researcher: data-analyst (market research, quantitative analysis, benchmarks)
+prd-interviewer: general-purpose (adaptable, good at asking smart questions)
+```
+
+## 🚀 Benefits Achieved
+
+1. **Research Quality**: Professional competitive and market analysis
+2. **Context Efficiency**: Parallel research vs sequential brainstorming
+3. **Smart Questions**: Research-informed rather than generic brainstorming
+4. **Decision Quality**: Market data + competitive intelligence backing decisions
+5. **Technical Alignment**: PRD considers existing architecture from day 1
+6. **Scalable Process**: Can handle complex domains with deep research needs
+7. **Reusable Insights**: Research can inform future related PRDs
+
+---
+
+**Important**: This creates research-backed PRDs rather than assumption-based documents, leading to better technical epics and implementation decisions.

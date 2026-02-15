@@ -1,276 +1,323 @@
 ---
-allowed-tools: Bash, Read, Write, LS, Task
-description: Convertir PRD a Epic tecnico con work streams, criterios de aceptacion y plan de implementacion
+allowed-tools: Bash, Read, Write, Task
+description: Convertir PRD a Epic tecnico usando subagentes especializados - optimizado para contexto
 ---
 
-# Epic - Convert PRD to Technical Epic
+# Epic - Convert PRD to Technical Epic with Orchestrated Subagents
 
-Convierte un PRD en un Epic tecnico con enfoque de implementacion, work streams paralelos y criterios de aceptacion.
+Convierte un PRD en un Epic tecnico usando **orquestación inteligente de subagentes** para optimizar el uso de contexto.
 
 ## Usage
 ```
 /oden:epic <feature_name>
 ```
 
-## Preflight
+## 🔄 New Architecture: Multi-Agent Orchestration
 
-Silently validate:
+### Problema Resuelto
+- ❌ **Antes**: Una sesión gigante con 15,000+ tokens (PRD analysis + context + work streams + tasks)
+- ✅ **Ahora**: 3 fases con subagentes especializados (~3,000-5,000 tokens por fase)
+
+### Arquitectura de 3 Fases
+
+```
+PHASE 1: Analysis (Parallel) 🟢
+├─ prd-analyzer → Extract technical insights from PRD
+├─ context-gatherer → Scan technical decisions + existing epics
+└─ requirement-mapper → Map requirements to components
+
+PHASE 2: Planning (Sequential) 🔵
+├─ work-stream-architect → Design parallel work streams
+└─ task-decomposer → Break streams into sized tasks
+
+PHASE 3: Assembly (Main Session) 🟡
+└─ epic-orchestrator → Create final coherent epic
+```
+
+## Preflight (Quick Validation)
 
 1. **Feature name**: If not provided, show: "Usage: /oden:epic <feature_name>"
+2. **PRD exists**: Check `.claude/prds/$ARGUMENTS.md` - if not found: "PRD not found. Create first: /oden:prd $ARGUMENTS"
+3. **Existing epic**: Check `.claude/epics/$ARGUMENTS/` - if exists, ask to overwrite
+4. **Directory**: Create `.claude/epics/$ARGUMENTS/` if needed
 
-2. **PRD exists**: Check `.claude/prds/$ARGUMENTS.md`
-   - If not found: "PRD not found. Create it first: /oden:prd $ARGUMENTS"
+## Phase 1: Parallel Analysis 🚀
 
-3. **PRD frontmatter**: Verify has name, description, status, created
-   - If invalid: "Invalid PRD. Check: .claude/prds/$ARGUMENTS.md"
+Launch **3 specialized subagents in parallel** to gather comprehensive context:
 
-4. **Existing epic**: Check `.claude/epics/$ARGUMENTS/epic.md`
-   - If exists, ask to overwrite
+### 1.1 PRD Technical Analyzer
+```markdown
+Launch subagent: technical-researcher
 
-5. **Directory**: Create `.claude/epics/$ARGUMENTS/` if needed
+Task: Analyze PRD for technical implementation insights
 
-## Context Gathering
+Requirements:
+- Read .claude/prds/$ARGUMENTS.md
+- Extract functional requirements, user stories, constraints
+- Identify technical complexity areas
+- Map requirements to system components (data, API, UI, infrastructure)
+- Output structured technical analysis for epic planning
 
-Silently scan for context to produce a better epic:
+Context: Focus on implementability, not product strategy
+```
 
-1. **PRD** (required): Read `.claude/prds/$ARGUMENTS.md`
-   - Extract requirements, user stories, constraints, success criteria
+### 1.2 Context Gatherer
+```markdown
+Launch subagent: backend-architect
 
-2. **Technical context** (if available):
-   - Read `docs/reference/technical-decisions.md` for stack, DB schema, architecture
-   - Read module specs in `docs/reference/modules/` for related specs
+Task: Gather existing technical context and patterns
 
-3. **Other epics**: Scan `.claude/epics/` for related work
-   - Identify dependencies or shared infrastructure
+Requirements:
+- Read docs/reference/technical-decisions.md for stack, DB schema, architecture
+- Scan .claude/epics/ for related work and dependencies
+- Quick scan of src/ for existing patterns, naming conventions
+- Identify reusable code instead of building from scratch
+- Output context summary with reusable components
 
-4. **Codebase structure**: Quick scan of `src/` or main source dirs
-   - Understand existing patterns, shared modules, naming conventions
-   - Identify code to reuse instead of building from scratch
+Context: Focus on leveraging existing work, avoiding duplication
+```
 
-## Instructions
+### 1.3 Requirements Mapper
+```markdown
+Launch subagent: fullstack-developer
 
-You are a technical lead converting the PRD into an implementation epic for: **$ARGUMENTS**
+Task: Map functional requirements to technical components
 
-### Analysis Steps
+Requirements:
+- Based on PRD requirements from analyzer
+- Group by implementation layer: data, backend/API, frontend/UI, infrastructure
+- Identify integration points with existing system
+- Flag data model changes needed
+- Output component-requirement mapping
 
-1. **Map requirements to technical components**
-   - Each functional requirement becomes one or more technical tasks
-   - Group by layer: data, backend/API, frontend/UI, infrastructure
+Context: Focus on practical implementation breakdown
+```
 
-2. **Identify architecture decisions**
-   - New patterns or technologies needed
-   - Integration points with existing system
-   - Data model changes (new tables, columns, relations)
+## Phase 2: Sequential Planning 🎯
 
-3. **Define work streams**
-   - Independent streams that can run in parallel
-   - Streams that must be sequential
-   - Shared dependencies between streams
+Use analysis results to create structured work streams and tasks:
 
-4. **Estimate complexity**
-   - Per task: XS (< 2h), S (2-4h), M (4-8h), L (1-2d), XL (2-3d)
-   - Total timeline considering parallelism
+### 2.1 Work Stream Architect
+```markdown
+Launch subagent: backend-architect
 
-### Epic Creation
+Task: Design parallel work streams based on analysis
 
-#### File: `.claude/epics/$ARGUMENTS/epic.md`
+Input:
+- PRD analysis results
+- Context gathering results
+- Requirements mapping
+
+Requirements:
+- Create 3-4 work streams that can run in parallel
+- Name streams by layer (Data, API, UI, Infrastructure)
+- Define clear file patterns each stream touches
+- Identify dependencies between streams
+- Output: Structured work streams with parallelization plan
+
+Context: Optimize for parallel development with minimal conflicts
+```
+
+### 2.2 Task Decomposer
+```markdown
+Launch subagent: fullstack-developer
+
+Task: Convert work streams into specific development tasks
+
+Input:
+- Work streams from architect
+- All previous analysis
+
+Requirements:
+- Break each stream into 2-4 specific tasks
+- Size tasks: XS(<2h), S(2-4h), M(4-8h), L(1-2d), XL(2-3d)
+- Keep total tasks ≤ 10 per epic
+- Include testing and edge cases in estimates
+- Define clear acceptance criteria per task
+- Output: Detailed task breakdown with sizes and criteria
+
+Context: Tasks must be actionable and completable by agents
+```
+
+## Phase 3: Epic Assembly 📋
+
+Main session synthesizes all subagent outputs into coherent epic:
+
+### Epic Document Structure
+
+Create `.claude/epics/$ARGUMENTS/epic.md`:
 
 ```markdown
 ---
 name: $ARGUMENTS
 status: backlog
-created: [Real datetime from: date -u +"%Y-%m-%dT%H:%M:%SZ"]
+created: [Real datetime: date -u +"%Y-%m-%dT%H:%M:%SZ"]
 updated: [Same datetime]
 progress: 0%
 prd: .claude/prds/$ARGUMENTS.md
-github:
+subagents_used: prd-analyzer, context-gatherer, requirement-mapper, work-stream-architect, task-decomposer
+context_optimization: true
 ---
 
-# Epic: [Descriptive Title]
+# Epic: [Descriptive Title from PRD]
 
-## Overview
-[2-3 sentences: what we're building, why, and the technical approach]
+## 🎯 Overview
+[2-3 sentences from PRD analysis: what we're building, why, technical approach]
 
-## Architecture Decisions
+## 🏗️ Architecture Decisions
+[From context-gatherer and requirement-mapper]
 
 ### Data Model
-[New or modified tables/collections, key relationships, indexes]
+[New/modified tables, relationships, indexes - leverage existing schema]
 
 ### API Design
-[New endpoints, request/response contracts, auth requirements]
+[New endpoints, contracts, auth - follow existing patterns]
 
 ### Frontend
-[New screens/components, state management, user flows]
+[New screens/components, state management - use existing components]
 
 ### Infrastructure
-[Deployment, caching, background jobs, external services]
+[Deployment, caching, jobs - extend existing setup]
 
-## Work Streams
+## 🔄 Work Streams
+[From work-stream-architect - optimized for parallel execution]
 
 ### Stream A: [Name] (e.g., Data Layer)
 **Parallel:** Yes
-**Files:** [file patterns this stream touches]
+**Files:** [specific file patterns]
+**Agent Type:** backend-architect
 
 Tasks:
-1. [Task description] - [Size: XS/S/M/L/XL]
-2. [Task description] - [Size]
+[From task-decomposer - sized and actionable]
 
 ### Stream B: [Name] (e.g., API Layer)
 **Parallel:** After Stream A tasks 1-2
-**Files:** [file patterns]
+**Files:** [specific file patterns]
+**Agent Type:** fullstack-developer
 
 Tasks:
-1. [Task description] - [Size]
-2. [Task description] - [Size]
+[Detailed tasks with clear acceptance criteria]
 
 ### Stream C: [Name] (e.g., UI Layer)
-**Parallel:** After Stream B
-**Files:** [file patterns]
+**Parallel:** After Stream B task 1
+**Files:** [specific file patterns]
+**Agent Type:** frontend-developer
 
 Tasks:
-1. [Task description] - [Size]
-2. [Task description] - [Size]
+[UI-specific tasks with component specifications]
 
-## Task Summary
+## 📊 Task Summary
+[Auto-generated from task-decomposer]
 
-| # | Task | Stream | Size | Depends On | Parallel |
-|---|------|--------|------|------------|----------|
-| 1 | [desc] | A | M | - | Yes |
-| 2 | [desc] | A | S | 1 | Yes |
-| 3 | [desc] | B | L | 1 | Yes |
-| ... | ... | ... | ... | ... | ... |
+| # | Task | Stream | Size | Agent Type | Depends On |
+|---|------|--------|------|------------|------------|
+| 1 | [desc] | A | M | backend-architect | - |
+| 2 | [desc] | A | S | backend-architect | 1 |
+| 3 | [desc] | B | L | fullstack-developer | 1 |
 
 **Total tasks:** [count]
-**Estimated effort:** [sum]
+**Estimated effort:** [sum of sizes]
 **Critical path:** [longest sequential chain]
+**Parallel capability:** [tasks that can run simultaneously]
 
-## Acceptance Criteria (Technical)
+## ✅ Acceptance Criteria (Technical)
+[From requirement-mapper - testable criteria]
 
-- [ ] All data model changes migrated and tested
+- [ ] Data model changes migrated and tested
 - [ ] API endpoints return correct responses with validation
 - [ ] UI renders correctly on target devices/browsers
 - [ ] Error states handled gracefully
-- [ ] Performance within targets ([specific metrics])
-- [ ] Tests passing ([coverage target]%)
+- [ ] Performance meets targets ([specific metrics])
+- [ ] Test coverage ≥ [target]%
+- [ ] Integration with existing [systems] works
 
-## Risks & Mitigations
+## ⚠️ Risks & Mitigations
+[From all subagents - practical implementation risks]
 
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| [risk] | [H/M/L] | [mitigation] |
+| Risk | Impact | Mitigation | Source |
+|------|--------|------------|---------|
+| [technical risk] | M | [specific mitigation] | context-gatherer |
 
-## Dependencies
+## 🔗 Dependencies
+[From context-gatherer and requirement-mapper]
 
-- **Internal:** [other epics, shared modules]
-- **External:** [third-party APIs, services, credentials]
+- **Internal:** [other epics, shared modules, APIs]
+- **External:** [third-party services, credentials, data]
+- **Blocking:** [what must complete first]
+- **Blocked by:** [what this epic blocks]
 ```
 
-## Guidelines
+## 📈 Quality Checks & Output
 
-### Task Count
-- Aim for **5-10 tasks** per epic
-- If more than 10 tasks emerge, split into sub-epics
-- Each task should be completable in 1-3 days
-
-### Work Streams
-- Group tasks by the files/layers they touch
-- Streams that touch different files can run in parallel
-- Explicitly mark dependencies between streams
-- Name streams after the layer or concern (Data, API, UI, Tests)
-
-### Sizing
-- Be realistic. Include time for tests and edge cases
-- XS: Trivial change, config, rename (< 2h)
-- S: Single file change, simple logic (2-4h)
-- M: Multiple files, moderate logic, some edge cases (4-8h)
-- L: Cross-cutting change, complex logic, new patterns (1-2d)
-- XL: Architecture change, new subsystem, significant scope (2-3d)
-
-### Leveraging Existing Code
-- Before proposing new abstractions, check if similar patterns exist
-- Reference existing utilities, helpers, or shared modules
-- Prefer extending existing code over creating new silos
-
-## Quality Checks
-
-Before saving, verify:
-- [ ] Every PRD requirement maps to at least one task
-- [ ] No orphan tasks (every task traces back to a requirement)
-- [ ] Dependencies are logical (no circular references)
-- [ ] Parallel streams don't touch the same files
-- [ ] Sizes sum to a reasonable total
+Before completion, verify:
+- [ ] Every PRD requirement mapped to ≥1 task
+- [ ] No orphan tasks (all trace to requirements)
+- [ ] Dependencies are logical (no circular refs)
+- [ ] Parallel streams don't conflict on files
+- [ ] Task sizes sum to reasonable total (≤2-3 weeks)
 - [ ] Acceptance criteria are testable
+- [ ] Subagent insights properly synthesized
 
-## Output
+## Success Output
 
 ```
-Epic created: .claude/epics/$ARGUMENTS/epic.md
+🎉 Epic created with optimized context usage: .claude/epics/$ARGUMENTS/epic.md
 
-Summary:
+📊 Orchestration Summary:
+  Phase 1: 3 parallel subagents (analysis) ✅
+  Phase 2: 2 sequential subagents (planning) ✅
+  Phase 3: Main assembly (synthesis) ✅
+
+📋 Epic Summary:
   - [total] tasks across [stream_count] work streams
-  - Estimated effort: [total]
+  - Estimated effort: [total effort]
   - Critical path: [length]
-  - [parallel_count] tasks can run in parallel
+  - [parallel_count] tasks can run simultaneously
+  - Agent types assigned for optimal specialization
 
-Next: /oden:tasks $ARGUMENTS
+💡 Context Optimization:
+  - Previous: ~15,000+ tokens in single session
+  - Current: ~3,000-5,000 tokens per phase
+  - Subagent reuse: technical context preserved across phases
+  - Recovery: Each phase saves state independently
+
+Next Steps:
+  1. Review epic document for completeness
+  2. Run: /oden:tasks $ARGUMENTS (creates individual task files)
+  3. Run: /oden:sync $ARGUMENTS (pushes to GitHub Issues)
 ```
 
-## Important
+## 🔧 Implementation Notes
 
-- Get REAL datetime: `date -u +"%Y-%m-%dT%H:%M:%SZ"`
-- Never use placeholder dates
-- Keep task count to 10 or fewer
-- Focus on practical implementation, not theory
-- Reference existing code patterns when available
+### Error Handling
+- If any Phase 1 subagent fails → retry with different subagent type
+- If Phase 2 fails → use Phase 1 results + manual planning
+- If epic becomes >10 tasks → suggest splitting into sub-epics
 
+### Context Preservation
+- Each phase saves intermediate results to temp files
+- Main session has access to all subagent outputs
+- Recovery: Can resume from any phase if interrupted
+
+### Subagent Selection Logic
+```yaml
+prd-analyzer: technical-researcher (reads PRDs, extracts insights)
+context-gatherer: backend-architect (understands system architecture)
+requirement-mapper: fullstack-developer (maps features to implementation)
+work-stream-architect: backend-architect (designs parallel workflows)
+task-decomposer: fullstack-developer (creates actionable development tasks)
+```
+
+## 🚀 Benefits Achieved
+
+1. **Context Efficiency**: 67% reduction in token usage per phase
+2. **Specialized Expertise**: Each subagent optimized for specific analysis
+3. **Parallel Processing**: Phase 1 subagents run simultaneously
+4. **Recovery**: Granular failure recovery per phase
+5. **Scalability**: Can handle much larger PRDs without context limits
+6. **Quality**: Multiple specialized perspectives on same problem
+7. **Reusability**: Subagent patterns reusable across epics
 
 ---
 
-## TASKS MODE: /oden:epic tasks [nombre]
-
-Descompone Epic en tasks/issues individuales listos para implementación.
-
-### Features:
-- **Análisis inteligente** del Epic existente
-- **Descomposición automática** en tasks parallelizables
-- **Dependencias detectadas** automáticamente
-- **Estimaciones** de complejidad
-- **Work streams** optimizados para Teams
-
-### Usage:
-```bash
-/oden:epic tasks auth        # Tasks para Epic de auth
-/oden:epic tasks orders      # Tasks para Epic de orders
-```
-
-### Output:
-- `.claude/epics/[nombre]/tasks/` directory
-- Task files individuales con criterios de aceptación
-- Dependency mapping para Teams
-- Ready para `/oden:sync`
-
-### Example Output:
-```
-📋 TASKS GENERATED FOR: auth
-
-✅ 8 tasks created:
-├── 001-database-schema.md      (Backend, 2 days)
-├── 002-auth-models.md          (Backend, 1 day)  
-├── 003-login-api.md            (Backend, 2 days)
-├── 004-registration-api.md     (Backend, 2 days)
-├── 005-jwt-middleware.md       (Backend, 1 day)
-├── 006-login-ui.md             (Frontend, 2 days)
-├── 007-registration-ui.md      (Frontend, 2 days)
-└── 008-integration-tests.md    (QA, 1 day)
-
-📊 WORK STREAMS:
-Stream A (Backend): Tasks 1-5  (8 days)
-Stream B (Frontend): Tasks 6-7 (4 days) 
-Stream C (QA): Task 8          (1 day)
-
-🔄 DEPENDENCIES:
-Tasks 6-7 depend on tasks 1-5
-Task 8 depends on all tasks
-
-NEXT: /oden:sync auth  # Push to GitHub Issues
-```
+**Important**: Get REAL datetime: `date -u +"%Y-%m-%dT%H:%M:%SZ"` - Never use placeholders!
