@@ -1,6 +1,11 @@
-# /oden:bug - Quick Bug Resolution
+---
+allowed-tools: Bash, Read, Write, LS, Glob, Task
+description: Contextual bug diagnosis and automatic fixing system with >80% success rate for common development issues
+---
 
-Sistema de resolución rápida de bugs y problemas de desarrollo sin overhead de PRD/Epic completo.
+# /oden:bug - Contextual Bug Diagnosis System
+
+Sistema avanzado de diagnóstico contextual y resolución automática de problemas de desarrollo comunes con base de datos de patrones de error y validación de soluciones.
 
 ## Usage
 
@@ -8,24 +13,74 @@ Sistema de resolución rápida de bugs y problemas de desarrollo sin overhead de
 /oden:bug [descripción del problema]
 
 # Ejemplos
-/oden:bug el proyecto no levanta
-/oden:bug tests fallan en authentication module
-/oden:bug performance lento en dashboard
-/oden:bug error importing react components
+/oden:bug "project won't start"
+/oden:bug "npm install fails"
+/oden:bug "tests failing in authentication"
+/oden:bug "build errors with typescript"
+/oden:bug "database connection error"
 
 # Flags opcionales
-/oden:bug --quick "npm start error"     # Skip confirmaciones
-/oden:bug --verbose "build issues"     # Más detalles de diagnóstico
-/oden:bug --dry-run "db connection"    # Solo diagnóstico, no fix
+/oden:bug --auto "port already in use"     # Auto-apply solutions without confirmation
+/oden:bug --verbose "build issues"        # Detailed diagnostic output
+/oden:bug --dry-run "db connection"       # Diagnosis only, no fixes applied
+/oden:bug --rollback                      # Rollback last applied fix
 ```
 
-## Filosofía
+## Core Features
 
-**"Fix Fast, Learn Fast"** - Diagnosticar y resolver problemas comunes con mínimo friction, manteniendo el contexto del proyecto.
+- **Smart Context Detection**: Analyzes project structure, package.json, config files, and environment
+- **Pattern Matching Database**: 50+ common error patterns with validated solutions
+- **Automatic Solution Application**: Applies fixes with backup and rollback capabilities
+- **Success Validation**: Verifies fixes work before marking as complete
+- **Learning System**: Improves pattern matching based on success rates
 
 ---
 
-## IMPLEMENTACIÓN
+## IMPLEMENTATION
+
+### Execution Flow
+
+1. **Preflight Check**: Validate working directory and project structure
+2. **Context Analysis**: Detect project type, framework, environment setup
+3. **Error Pattern Matching**: Match issue description against pattern database
+4. **Solution Selection**: Choose best solution based on context and success rates
+5. **Backup Creation**: Create rollback point before applying fixes
+6. **Solution Application**: Execute fix with progress feedback
+7. **Validation**: Verify solution actually resolves the issue
+8. **Learning Update**: Update pattern success rates
+
+### Algorithm Details
+
+```bash
+# Step 1: Context Detection & Analysis
+detect_project_context() {
+    # Analyze project structure and configuration
+    # Identify framework, build tools, dependencies
+    # Check environment variables and setup
+    # Scan for recent error logs
+}
+
+# Step 2: Pattern Matching Engine
+match_error_patterns() {
+    # Query pattern database with fuzzy matching
+    # Score patterns based on:
+    #   - Error message similarity
+    #   - Project context match
+    #   - Historical success rate
+    #   - User confirmation patterns
+}
+
+# Step 3: Solution Application Pipeline
+apply_solution() {
+    # Create backup snapshot
+    # Execute solution steps with validation
+    # Test solution effectiveness
+    # Rollback if validation fails
+    # Update success statistics
+}
+```
+
+### Implementation Architecture
 
 ### Agentes Especializados
 

@@ -1,0 +1,394 @@
+{
+  "problem_definition": {
+    "default": {
+      "question": "What specific problem does {featureName} solve for your users?",
+      "context": "Understanding the core problem helps prioritize features and measure success",
+      "options": [
+        "Users can't accomplish a critical task",
+        "Current solution is too slow or complex",
+        "Missing feature that competitors have",
+        "Technical debt or system limitation",
+        "User experience is confusing or frustrating"
+      ],
+      "followUpTriggers": [
+        {
+          "type": "scenario_deep_dive",
+          "conditions": [{ "type": "length", "operator": "less_than", "value": 20 }],
+          "question": "Can you walk me through a specific scenario where users encounter this problem?",
+          "context": "Concrete examples help identify the real pain points"
+        }
+      ]
+    },
+    "authentication": {
+      "question": "What authentication challenges are your users currently facing?",
+      "context": "Authentication problems can significantly impact user adoption and security",
+      "options": [
+        "No authentication system exists",
+        "Current system is too complex for users",
+        "Security vulnerabilities in current implementation",
+        "Integration issues with existing systems",
+        "Poor user experience during login/signup"
+      ]
+    },
+    "payment": {
+      "question": "What payment-related problems need to be solved with {featureName}?",
+      "context": "Payment systems directly impact revenue and user trust",
+      "options": [
+        "No payment processing capability",
+        "High payment failure rates",
+        "Limited payment methods supported",
+        "Complex checkout process",
+        "International payment issues"
+      ]
+    }
+  },
+
+  "user_personas": {
+    "default": {
+      "question": "Who are the primary users that will benefit from {featureName}?",
+      "context": "Different user types have different needs, technical skills, and priorities",
+      "options": [
+        "End customers/consumers",
+        "Business administrators/managers",
+        "Technical developers/API users",
+        "Internal team members",
+        "External partners/vendors"
+      ],
+      "followUpTriggers": [
+        {
+          "type": "persona_details",
+          "conditions": [{ "type": "contains", "keywords": ["customer", "consumer", "end user"] }],
+          "question": "What's the typical technical comfort level of these end users?",
+          "context": "Technical comfort affects UI complexity and onboarding needs"
+        },
+        {
+          "type": "b2b_considerations",
+          "conditions": [{ "type": "contains", "keywords": ["business", "admin", "manager"] }],
+          "question": "What role-based permissions will different business users need?",
+          "context": "B2B features typically require sophisticated permission systems"
+        }
+      ]
+    }
+  },
+
+  "technical_implementation": {
+    "default": {
+      "question": "How should {featureName} integrate with your current {framework} architecture?",
+      "context": "Integration approach affects development time, maintainability, and system complexity",
+      "options": [
+        "Build as part of existing application",
+        "Create as separate microservice/API",
+        "Use third-party service integration",
+        "Hybrid approach (some internal, some external)"
+      ]
+    },
+    "authentication": {
+      "question": "What authentication methods should {featureName} support for your {projectType}?",
+      "context": "Balance security, user experience, development complexity, and maintenance overhead",
+      "options": [
+        "Email/password with verification",
+        "Social login (Google, GitHub, LinkedIn)",
+        "Passwordless/magic links",
+        "Multi-factor authentication",
+        "Enterprise SSO integration",
+        "Combination approach"
+      ]
+    },
+    "payment": {
+      "question": "What payment processing approach fits your {projectType} best?",
+      "context": "Payment architecture affects PCI compliance, costs, and international capabilities",
+      "options": [
+        "Stripe/PayPal integration (recommended)",
+        "Custom payment processor integration",
+        "Multiple payment provider support",
+        "Marketplace/split payment model",
+        "Subscription billing focus"
+      ]
+    },
+    "api_integration": {
+      "question": "How will {featureName} handle API design and external integrations?",
+      "context": "API decisions affect scalability, developer experience, and future flexibility",
+      "options": [
+        "RESTful API with OpenAPI documentation",
+        "GraphQL API for flexible querying",
+        "Webhook system for real-time updates",
+        "Batch processing for bulk operations",
+        "Mix of real-time and batch approaches"
+      ]
+    }
+  },
+
+  "success_criteria": {
+    "default": {
+      "question": "How will you measure if {featureName} is successful?",
+      "context": "Clear success metrics guide development priorities and validate business impact",
+      "followUpTriggers": [
+        {
+          "type": "metrics_deep_dive",
+          "conditions": [{ "type": "contains", "keywords": ["users", "engagement", "adoption"] }],
+          "question": "What specific user engagement metrics matter most for your {projectType}?",
+          "context": "Different project types have different critical engagement patterns"
+        },
+        {
+          "type": "business_metrics",
+          "conditions": [{ "type": "contains", "keywords": ["revenue", "conversion", "business"] }],
+          "question": "What's your target impact on revenue or business KPIs?",
+          "context": "Quantified business goals help prioritize features"
+        }
+      ]
+    },
+    "authentication": {
+      "question": "What success metrics will indicate that your authentication system is working well?",
+      "context": "Authentication success is measured by both security and user experience",
+      "options": [
+        "High signup completion rate (>70%)",
+        "Low support tickets for login issues",
+        "Fast time-to-first-login for new users",
+        "High user retention after signup",
+        "Security: zero authentication-related breaches"
+      ]
+    },
+    "payment": {
+      "question": "How will you measure payment system success?",
+      "context": "Payment metrics directly correlate with business revenue and user trust",
+      "options": [
+        "Payment success rate (>95%)",
+        "Checkout completion rate",
+        "Average payment processing time",
+        "Customer payment method adoption",
+        "Reduction in payment-related support tickets"
+      ]
+    }
+  },
+
+  "scope_boundaries": {
+    "default": {
+      "question": "For the first version of {featureName}, what features are must-haves vs nice-to-haves?",
+      "context": "Clear scope boundaries prevent feature creep and ensure timely delivery",
+      "followUpTriggers": [
+        {
+          "type": "mvp_timeline",
+          "conditions": [{ "type": "contains", "keywords": ["mvp", "minimum", "first"] }],
+          "question": "What's your target timeline for the MVP of {featureName}?",
+          "context": "Timeline constraints affect which features can realistically be included"
+        }
+      ]
+    }
+  },
+
+  "user_experience": {
+    "default": {
+      "question": "What should the user experience flow look like for {featureName}?",
+      "context": "UX decisions made early prevent costly redesigns and improve user adoption"
+    },
+    "authentication": {
+      "question": "What should the signup and login experience be like for your users?",
+      "context": "Authentication UX significantly impacts user conversion and retention",
+      "options": [
+        "Simple one-step signup with email verification",
+        "Progressive profiling (collect info over time)",
+        "Social login as primary option",
+        "Passwordless experience with magic links",
+        "Traditional form-based approach"
+      ]
+    },
+    "mobile-app": {
+      "question": "How should {featureName} work on mobile devices in your {framework} app?",
+      "context": "Mobile UX constraints affect feature design and user flows",
+      "options": [
+        "Mobile-first design with touch-optimized interactions",
+        "Responsive design that adapts to screen size",
+        "Native mobile features (push notifications, offline)",
+        "Progressive Web App capabilities",
+        "Simplified mobile version of desktop features"
+      ]
+    }
+  },
+
+  "security_compliance": {
+    "authentication": {
+      "question": "What security and compliance requirements apply to user data in {featureName}?",
+      "context": "Security requirements vary by industry, user data types, and geographic reach",
+      "options": [
+        "GDPR compliance (EU users)",
+        "CCPA compliance (California users)",
+        "SOC 2 Type II compliance",
+        "Industry-specific regulations (HIPAA, PCI DSS)",
+        "Basic security best practices",
+        "No specific compliance requirements"
+      ]
+    },
+    "payment": {
+      "question": "What compliance and security standards must your payment system meet?",
+      "context": "Payment compliance is legally required and affects user trust",
+      "options": [
+        "PCI DSS Level 1 (if storing card data)",
+        "PCI DSS SAQ A (tokenized payments only)",
+        "Strong Customer Authentication (SCA) for EU",
+        "Regional payment regulations",
+        "Industry-specific financial compliance"
+      ]
+    }
+  },
+
+  "web_considerations": {
+    "default": {
+      "question": "How important are web-specific features for {featureName}?",
+      "context": "Web applications have unique opportunities for SEO, analytics, and discovery",
+      "options": [
+        "SEO optimization is critical",
+        "Web analytics and tracking needed",
+        "Social sharing capabilities important",
+        "Cross-browser compatibility required",
+        "Progressive Web App features desired"
+      ]
+    }
+  },
+
+  "mobile_considerations": {
+    "default": {
+      "question": "What mobile-specific capabilities does {featureName} need?",
+      "context": "Mobile apps can leverage device features that web apps cannot",
+      "options": [
+        "Push notifications",
+        "Offline functionality",
+        "Camera/photo capture",
+        "GPS/location services",
+        "Device sensors (accelerometer, etc.)",
+        "App store optimization",
+        "Biometric authentication"
+      ]
+    }
+  },
+
+  "api_considerations": {
+    "default": {
+      "question": "What API design principles are most important for {featureName}?",
+      "context": "API design affects developer experience, performance, and long-term maintainability",
+      "options": [
+        "Developer-friendly documentation and examples",
+        "Rate limiting and usage analytics",
+        "Versioning strategy for backwards compatibility",
+        "Real-time capabilities (WebSockets, SSE)",
+        "Bulk operations and batch processing",
+        "Strong authentication and security"
+      ]
+    }
+  },
+
+  "performance_requirements": {
+    "default": {
+      "question": "What performance requirements are critical for {featureName}?",
+      "context": "Performance requirements affect architecture decisions and user experience",
+      "options": [
+        "Sub-second response times",
+        "High concurrent user support",
+        "Minimal bandwidth usage",
+        "Offline/poor connectivity support",
+        "Real-time data synchronization",
+        "Background processing capabilities"
+      ]
+    }
+  },
+
+  "scalability": {
+    "default": {
+      "question": "How should {featureName} be designed to handle growth?",
+      "context": "Scalability planning prevents costly rewrites as user base grows",
+      "options": [
+        "Horizontal scaling with load balancing",
+        "Database optimization and caching",
+        "Microservices architecture",
+        "CDN for global content delivery",
+        "Queue-based background processing",
+        "Start simple, scale when needed"
+      ]
+    }
+  },
+
+  "data_privacy": {
+    "default": {
+      "question": "How should {featureName} handle user data privacy?",
+      "context": "Privacy considerations affect data architecture and user trust",
+      "options": [
+        "Minimal data collection by default",
+        "Explicit consent for all data usage",
+        "Data anonymization for analytics",
+        "User data export/deletion capabilities",
+        "Regional data residency requirements"
+      ]
+    }
+  },
+
+  "accessibility": {
+    "default": {
+      "question": "What accessibility requirements should {featureName} meet?",
+      "context": "Accessibility affects legal compliance and user inclusion",
+      "options": [
+        "WCAG 2.1 AA compliance",
+        "Screen reader compatibility",
+        "Keyboard navigation support",
+        "High contrast mode support",
+        "Multiple language support",
+        "Basic accessibility best practices"
+      ]
+    }
+  },
+
+  "seo_considerations": {
+    "default": {
+      "question": "How important is SEO for {featureName} in your {framework} application?",
+      "context": "SEO requirements affect technical architecture and content strategy",
+      "options": [
+        "Critical - this feature drives organic traffic",
+        "Important - needs to be discoverable",
+        "Nice to have - some SEO benefit",
+        "Not important - internal/authenticated features"
+      ]
+    }
+  },
+
+  "platform_compatibility": {
+    "default": {
+      "question": "Which platforms should {featureName} support?",
+      "context": "Platform decisions affect development complexity and user reach",
+      "options": [
+        "iOS and Android equally",
+        "iOS first, Android later",
+        "Android first, iOS later",
+        "Web-based cross-platform approach",
+        "Native platform-specific optimizations"
+      ]
+    }
+  },
+
+  "financial_considerations": {
+    "payment": {
+      "question": "What are the key financial considerations for {featureName}?",
+      "context": "Payment features have direct business impact and cost implications",
+      "options": [
+        "Minimize transaction fees",
+        "Support international currencies",
+        "Handle complex pricing models",
+        "Revenue sharing/marketplace features",
+        "Subscription and recurring billing",
+        "Tax calculation and compliance"
+      ]
+    }
+  },
+
+  "technical_constraints": {
+    "default": {
+      "question": "What technical constraints or limitations should we consider for {featureName}?",
+      "context": "Understanding constraints early prevents costly architectural changes",
+      "followUpTriggers": [
+        {
+          "type": "legacy_system_integration",
+          "conditions": [{ "type": "contains", "keywords": ["legacy", "existing", "current system"] }],
+          "question": "How will {featureName} integrate with your existing legacy systems?",
+          "context": "Legacy integration often requires specific architectural patterns"
+        }
+      ]
+    }
+  }
+}

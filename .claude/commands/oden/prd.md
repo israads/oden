@@ -95,46 +95,77 @@ Requirements:
 Context: Ground PRD in real market data and user needs
 ```
 
-## Phase 2: Smart Brainstorming Session 💡
+## Phase 2: Enhanced Brainstorming Session 🧠
 
-Use research results to conduct focused, intelligent brainstorming:
+**NEW: Enhanced Question System Integration** - Leverages intelligent question generation with research context:
 
-### 2.1 Contextual PRD Interviewer
+### 2.1 Context-Aware Question Generation
+
+The enhanced question system analyzes research results and project context to generate 5-8 highly targeted questions:
+
+```javascript
+// Enhanced question generation process
+const projectContext = await contextAdapter.analyzeProject();
+const questions = await enhancedQuestions.generateContextualQuestions(
+    featureName,
+    projectContext,
+    researchResults
+);
+
+// Question categories adapted based on research:
+// - Business value (informed by market research)
+// - User impact (from competitive analysis)
+// - Technical feasibility (from context analysis)
+// - Success metrics (using industry benchmarks)
+// - Integration requirements (from existing system analysis)
+```
+
+### 2.2 Intelligent Question Adaptation
+
+Questions are automatically customized based on research findings:
+
+**Framework-Specific Questions:**
+- For React/Next.js: "How should this feature leverage SSR/SSG for SEO?"
+- For mobile apps: "Which native device capabilities are critical for this feature?"
+
+**Domain-Specific Questions:**
+- For payment features: "What compliance standards (PCI DSS) must we meet?"
+- For auth features: "What security standards and MFA requirements apply?"
+
+**Research-Informed Questions:**
+- "Competitor X achieves 40% conversion with [specific pattern]. Should we adopt this approach?"
+- "Market research shows [trend] growing 60% YoY. How do we position against this?"
+- "Your existing [technical stack] constrains us to [limitation]. What's the best workaround?"
+
+### 2.3 Advanced Brainstorming Interviewer
 ```markdown
-You are a product manager conducting a smart brainstorming session for: **$ARGUMENTS**
+You are conducting an enhanced brainstorming session for: **$ARGUMENTS**
 
-Based on the research phase results:
-- Competitive landscape: [insights from competitive-researcher]
-- Technical context: [constraints from context-analyzer]
-- Market research: [trends from domain-researcher]
+## Research Context Available:
+- Competitive landscape: [insights with specific competitor examples]
+- Technical context: [framework, constraints, integration points]
+- Market research: [trends, benchmarks, opportunities]
 
-### Adaptive Smart Questions
+## Enhanced Contextual Questions:
+[5-8 intelligently generated questions based on:]
+- Project framework detection (React vs Vue vs mobile)
+- Feature category analysis (auth vs payments vs analytics)
+- Competitive gap identification
+- Technical constraint mapping
+- Industry benchmark integration
 
-Ask 3-5 focused questions that leverage research insights:
+## Question Priority System:
+- **High Priority (3-4 questions)**: Critical decisions affecting architecture
+- **Medium Priority (2-3 questions)**: Important but flexible decisions
+- **Contextual (1-2 questions)**: Unique to this project's situation
 
-**If competitive analysis found gaps:**
-- "Competitors X and Y both struggle with [specific issue]. How should we solve this differently?"
+## Interactive Flow:
+- Present questions in priority order
+- Generate follow-up questions based on responses
+- Reference specific research findings in follow-ups
+- Validate responses against competitive benchmarks
 
-**If technical constraints exist:**
-- "Given our [existing stack/architecture], what's the most feasible approach for [key feature]?"
-
-**If market research shows trends:**
-- "[Market trend] is growing 40% YoY. How do we position against this opportunity?"
-
-**Core question areas (adapt based on research):**
-- **Problem**: What specific user pain does this solve? (reference research findings)
-- **Users**: Who benefits most? (use personas from domain research)
-- **Scope**: What's MVP vs full vision? (informed by competitive analysis)
-- **Constraints**: Timeline, budget, technical limitations? (from context analysis)
-- **Success**: How do we measure this worked? (use industry benchmarks)
-
-### Question Guidelines:
-- Reference specific research findings in questions
-- Don't ask about things already known from technical-decisions.md
-- Focus on decisions that research couldn't answer
-- Keep total questions to 3-5 for focused session
-
-Context: Use research to ask smarter, more targeted questions
+Context: Use enhanced question engine + research to generate the most targeted, valuable brainstorming session possible
 ```
 
 ## Phase 3: PRD Assembly 📋
@@ -333,11 +364,15 @@ prd-interviewer: general-purpose (adaptable, good at asking smart questions)
 
 1. **Research Quality**: Professional competitive and market analysis
 2. **Context Efficiency**: Parallel research vs sequential brainstorming
-3. **Smart Questions**: Research-informed rather than generic brainstorming
-4. **Decision Quality**: Market data + competitive intelligence backing decisions
-5. **Technical Alignment**: PRD considers existing architecture from day 1
-6. **Scalable Process**: Can handle complex domains with deep research needs
-7. **Reusable Insights**: Research can inform future related PRDs
+3. **Enhanced Question Intelligence**: 5-8 context-aware questions vs 3-5 generic ones
+4. **Framework-Specific Adaptation**: Questions adapt to React/Vue/mobile/backend contexts
+5. **Domain Expertise Integration**: Payment/auth/analytics domain-specific questions
+6. **Decision Quality**: Market data + competitive intelligence backing decisions
+7. **Technical Alignment**: PRD considers existing architecture from day 1
+8. **Scalable Process**: Can handle complex domains with deep research needs
+9. **Reusable Insights**: Research can inform future related PRDs
+10. **Priority-Based Flow**: High/medium/contextual question prioritization
+11. **Follow-Up Intelligence**: Dynamic follow-up questions based on responses
 
 ---
 

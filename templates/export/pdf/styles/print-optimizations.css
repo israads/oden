@@ -1,0 +1,339 @@
+/**
+ * Print Optimizations for PDF Generation
+ * Ensures consistent rendering across different print engines
+ */
+
+/* Page Setup */
+@page {
+    size: A4;
+    margin: 1in;
+    orphans: 3;
+    widows: 3;
+}
+
+@page :first {
+    margin: 0;
+}
+
+@page :left {
+    margin-left: 1.25in;
+    margin-right: 0.75in;
+}
+
+@page :right {
+    margin-left: 0.75in;
+    margin-right: 1.25in;
+}
+
+/* Print Media Optimizations */
+@media print {
+    /* Force exact color reproduction */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Hide elements not suitable for print */
+    .no-print {
+        display: none !important;
+    }
+
+    /* Optimize text for print */
+    body {
+        font-size: 11pt;
+        line-height: 1.4;
+        color: #000000;
+        background: #ffffff !important;
+    }
+
+    /* Heading optimizations */
+    h1 {
+        font-size: 18pt;
+        margin-top: 24pt;
+        margin-bottom: 12pt;
+        page-break-after: avoid;
+    }
+
+    h2 {
+        font-size: 16pt;
+        margin-top: 20pt;
+        margin-bottom: 10pt;
+        page-break-after: avoid;
+    }
+
+    h3 {
+        font-size: 14pt;
+        margin-top: 16pt;
+        margin-bottom: 8pt;
+        page-break-after: avoid;
+    }
+
+    h4, h5, h6 {
+        font-size: 12pt;
+        margin-top: 12pt;
+        margin-bottom: 6pt;
+        page-break-after: avoid;
+    }
+
+    /* Paragraph optimizations */
+    p {
+        margin-bottom: 12pt;
+        text-align: justify;
+        hyphens: auto;
+        -webkit-hyphens: auto;
+        -ms-hyphens: auto;
+    }
+
+    /* List optimizations */
+    ul, ol {
+        margin: 12pt 0;
+        padding-left: 24pt;
+    }
+
+    li {
+        margin-bottom: 6pt;
+        page-break-inside: avoid;
+    }
+
+    /* Table optimizations */
+    table {
+        border-collapse: collapse;
+        page-break-inside: avoid;
+        width: 100%;
+        margin: 12pt 0;
+    }
+
+    thead {
+        display: table-header-group;
+    }
+
+    tbody {
+        display: table-row-group;
+    }
+
+    tfoot {
+        display: table-footer-group;
+    }
+
+    tr {
+        page-break-inside: avoid;
+    }
+
+    th, td {
+        padding: 6pt 8pt;
+        border: 1pt solid #cccccc;
+        text-align: left;
+        vertical-align: top;
+    }
+
+    th {
+        background: #f5f5f5 !important;
+        font-weight: bold;
+    }
+
+    /* Code block optimizations */
+    pre, code {
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 9pt;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    .code-block {
+        background: #f8f9fa !important;
+        border: 1pt solid #e9ecef !important;
+        border-radius: 0 !important;
+        padding: 8pt !important;
+        margin: 12pt 0 !important;
+        page-break-inside: avoid;
+        overflow: visible !important;
+    }
+
+    /* Image optimizations */
+    img {
+        max-width: 100% !important;
+        height: auto !important;
+        page-break-inside: avoid;
+        border-radius: 0 !important;
+    }
+
+    .image-container {
+        text-align: center;
+        margin: 12pt 0;
+        page-break-inside: avoid;
+    }
+
+    .image-caption {
+        font-size: 9pt;
+        color: #666666;
+        font-style: italic;
+        margin-top: 6pt;
+    }
+
+    /* Link optimizations */
+    a {
+        color: #0000ff !important;
+        text-decoration: underline;
+    }
+
+    /* Remove link URLs in print (optional) */
+    a[href]:not([href^="#"])::after {
+        content: " (" attr(href) ")";
+        font-size: 8pt;
+        color: #666666;
+    }
+
+    /* Blockquote optimizations */
+    blockquote {
+        border-left: 4pt solid #cccccc !important;
+        background: #f8f9fa !important;
+        margin: 12pt 0 !important;
+        padding: 8pt 12pt !important;
+        page-break-inside: avoid;
+        font-style: italic;
+    }
+
+    /* Callout optimizations */
+    .callout {
+        border: 1pt solid #cccccc !important;
+        border-radius: 0 !important;
+        margin: 12pt 0 !important;
+        padding: 8pt 12pt !important;
+        page-break-inside: avoid;
+        background: #f8f9fa !important;
+    }
+
+    .callout-warning {
+        border-color: #ffc107 !important;
+        background: #fff3cd !important;
+    }
+
+    .callout-info {
+        border-color: #17a2b8 !important;
+        background: #d1ecf1 !important;
+    }
+
+    .callout-success {
+        border-color: #28a745 !important;
+        background: #d4edda !important;
+    }
+
+    /* Page break controls */
+    .page-break-before {
+        page-break-before: always;
+    }
+
+    .page-break-after {
+        page-break-after: always;
+    }
+
+    .page-break-avoid {
+        page-break-inside: avoid;
+    }
+
+    .keep-together {
+        page-break-inside: avoid;
+    }
+
+    /* Cover page optimizations */
+    .cover-page {
+        page-break-after: always;
+        height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Table of contents optimizations */
+    .table-of-contents {
+        page-break-before: always;
+    }
+
+    .toc-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 6pt;
+        page-break-inside: avoid;
+    }
+
+    .toc-page-number {
+        font-weight: bold;
+    }
+
+    /* Footer and header optimizations */
+    .header, .footer {
+        font-size: 9pt;
+        color: #666666;
+    }
+
+    /* Ensure consistent spacing */
+    .document-content > *:first-child {
+        margin-top: 0 !important;
+    }
+
+    .document-content > *:last-child {
+        margin-bottom: 0 !important;
+    }
+}
+
+/* Screen optimizations for preview */
+@media screen {
+    body {
+        max-width: 8.5in;
+        margin: 0 auto;
+        padding: 1in;
+        background: #ffffff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* High DPI optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .code-block {
+        font-size: 8pt;
+    }
+
+    .image-caption {
+        font-size: 8pt;
+    }
+}
+
+/* Memory optimization for large documents */
+.large-document {
+    font-size: 10pt;
+    line-height: 1.3;
+}
+
+.large-document h1 {
+    font-size: 16pt;
+}
+
+.large-document h2 {
+    font-size: 14pt;
+}
+
+.large-document h3 {
+    font-size: 12pt;
+}
+
+/* Accessibility enhancements */
+@media print and (prefers-contrast: high) {
+    body {
+        color: #000000 !important;
+    }
+
+    .code-block {
+        background: #ffffff !important;
+        border: 2pt solid #000000 !important;
+    }
+
+    .callout {
+        background: #ffffff !important;
+        border: 2pt solid #000000 !important;
+    }
+
+    blockquote {
+        background: #ffffff !important;
+        border-left: 4pt solid #000000 !important;
+    }
+}

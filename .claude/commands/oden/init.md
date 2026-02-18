@@ -267,7 +267,102 @@ Mostrar opciones relevantes según el objetivo:
 
 ---
 
-## PASO 7: Resumen y Confirmación
+## PASO 7: 🔧 Configuración de Productivity Features (NUEVO)
+
+**Nueva funcionalidad:** Configurar features de productividad durante la inicialización.
+
+### 7.1 Selección de Features
+
+**Pregunta:** "¿Qué features de productividad quieres habilitar?"
+
+**Features disponibles:**
+- **Bug Diagnosis & Auto-Fix**: Diagnóstico y corrección automática de errores comunes
+- **Enhanced Brainstorming**: Motor de brainstorming inteligente con preguntas contextuales
+- **Quality Pipeline**: Pipeline de calidad con agentes especializados
+- **Development Dashboard**: Dashboard en tiempo real para monitoreo de progreso
+- **Documentation Export**: Exportación de documentación a múltiples formatos
+
+### 7.2 Configuración por Feature
+
+Para cada feature habilitada, configurar:
+
+#### Bug Diagnosis:
+- Auto-fix habilitado o requiere aprobación manual
+- Nivel de notificaciones (todas, solo errores, silencioso)
+- Política de backup y rollback
+
+#### Enhanced Brainstorming:
+- Profundidad de preguntas (básico: 3-5, mejorado: 5-8, profundo: 8-12)
+- Timeout de sesión
+- Auto-exportar notas de brainstorming
+
+#### Quality Pipeline:
+- Etapas (pre-commit, pre-PR, pre-deploy)
+- Agentes especializados (security, performance, accessibility, best-practices)
+- Configuración de timeouts y fail-fast
+
+#### Development Dashboard:
+- Auto-start con sesiones de `/oden:work`
+- Puerto del dashboard (default: 3333)
+- Retención de métricas históricas
+
+#### Documentation Export:
+- Formato por defecto (PDF, Notion, Confluence, DOCX)
+- Configuración de branding empresarial
+- Auto-export durante desarrollo
+
+### 7.3 Recomendaciones Inteligentes
+
+El wizard genera recomendaciones basadas en:
+- **Tipo de proyecto**: E-commerce → pipeline de security; Productividad → dashboard
+- **Nivel de experiencia**: Principiantes → auto-fix habilitado
+- **Stack tecnológico**: React → pipeline de best-practices
+
+---
+
+## PASO 8: 👥 Configuración de Team (NUEVO)
+
+**Nueva funcionalidad:** Soporte para configuración compartida en equipos.
+
+### 8.1 Configuración Individual vs Team
+
+**Pregunta:** "¿Es este un proyecto de equipo?"
+
+**Si es individual:**
+- Configuración local en `.oden-config.json`
+- Todas las features son preferencias personales
+
+**Si es team project:**
+- Configuración compartida via Git
+- Configuración personal separada y Git-ignored
+- Manejo de conflictos entre configuraciones
+
+### 8.2 Configuración de Team
+
+Para proyectos de equipo:
+
+**Información del equipo:**
+- Nombre del equipo
+- Estrategia de resolución de conflictos:
+  - `prompt`: Preguntar al usuario (recomendado)
+  - `team_wins`: Configuración de equipo prevalece
+  - `personal_wins`: Configuración personal prevalece
+  - `merge`: Merge inteligente de configuraciones
+
+**Features compartidas:**
+- Seleccionar qué features se comparten vs preferencias personales
+- Ejemplos: Pipeline y Export típicamente compartidas, Dashboard personal
+
+### 8.3 Archivos de Configuración
+
+**Team project genera:**
+- `.oden-config.json`: Configuración compartida (committear a Git)
+- `.oden-config.personal.json`: Preferencias personales (Git-ignored)
+- `.gitignore` actualizado automáticamente
+
+---
+
+## PASO 9: Resumen y Confirmación (Actualizado)
 
 ```
 ╔══════════════════════════════════════════════════════════════╗
@@ -287,6 +382,19 @@ Mostrar opciones relevantes según el objetivo:
 ║ FEATURES V1                                                  ║
 ║ {lista de features}                                          ║
 ╠══════════════════════════════════════════════════════════════╣
+║ PRODUCTIVITY FEATURES                                        ║
+║ ├─ Bug Diagnosis: {habilitado/deshabilitado}                ║
+║ ├─ Enhanced Brainstorming: {configuración}                  ║
+║ ├─ Quality Pipeline: {agentes habilitados}                  ║
+║ ├─ Dashboard: {auto-start, puerto}                          ║
+║ └─ Export: {formato, branding}                              ║
+╠══════════════════════════════════════════════════════════════╣
+║ TEAM CONFIGURATION                                           ║
+║ ├─ Team Project: {Si/No}                                    ║
+║ ├─ Team Name: {nombre}                                       ║
+║ ├─ Shared Features: {lista}                                 ║
+║ └─ Conflict Resolution: {estrategia}                         ║
+╠══════════════════════════════════════════════════════════════╣
 ║ INTEGRACIONES                                                ║
 ║ {lista de integraciones}                                     ║
 ╠══════════════════════════════════════════════════════════════╣
@@ -299,24 +407,39 @@ Mostrar opciones relevantes según el objetivo:
 
 ---
 
-## PASO 8: Generación de Estructura
+## PASO 10: Generación de Estructura (Actualizado)
 
 Una vez confirmado:
 
-### 8.1 Crear Directorios
+### 10.1 Crear Directorios
 
 ```bash
+# Directorios de documentación (existentes)
 mkdir -p docs/{guides,reference/modules,development/{current,completed},archived,temp}
 mkdir -p .claude/{commands,scripts,rules,context}
+
+# NUEVO: Directorios para productivity features
+mkdir -p .claude/diagnosis/{patterns,backups}      # Bug diagnosis
+mkdir -p .claude/brainstorming/sessions            # Brainstorming sessions
+mkdir -p .claude/pipeline/reports                  # Quality pipeline
+mkdir -p .claude/exports/{templates,output}        # Documentation export
 ```
 
-### 8.2 Crear Archivos Iniciales
+### 10.2 Crear Archivos Iniciales
 
+**Archivos existentes:**
 1. **docs/README.md** - Índice de documentación
-2. **docs/reference/technical-decisions.md** - Con decisiones del wizard
+2. **docs/reference/technical-decisions.md** - Con decisiones del wizard + productivity config
 3. **docs/reference/competitive-analysis.md** - Template
 4. **docs/reference/implementation-plan.md** - Template
-5. **CLAUDE.md** - Instrucciones del proyecto
+5. **CLAUDE.md** - Instrucciones del proyecto + features habilitadas
+
+**NUEVOS archivos de configuración:**
+6. **`.oden-config.json`** - Configuración principal del proyecto
+7. **`.oden-config.personal.json`** - Configuración personal (solo team projects, Git-ignored)
+8. **`.claude/diagnosis/patterns/custom-patterns.json`** - Patrones de bugs personalizados
+9. **`.claude/brainstorming/templates.json`** - Templates de brainstorming contextuales
+10. **`.claude/pipeline/config.json`** - Configuración del pipeline de calidad
 
 ### 8.3 Contenido de technical-decisions.md
 

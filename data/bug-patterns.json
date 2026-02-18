@@ -1,0 +1,537 @@
+[
+  {
+    "id": "port-already-in-use",
+    "name": "Port Already In Use",
+    "category": "network",
+    "description": "Development server port is already occupied by another process",
+    "keywords": ["port", "already", "use", "EADDRINUSE", "listen", "address", "busy"],
+    "errorSignatures": [
+      {
+        "pattern": "Error: listen EADDRINUSE.*:(\\d+)",
+        "weight": 0.8
+      },
+      {
+        "pattern": "Port \\d+ is already in use",
+        "weight": 0.9
+      },
+      {
+        "pattern": "EADDRINUSE: address already in use",
+        "weight": 0.8
+      },
+      {
+        "pattern": "something is already running on port \\d+",
+        "weight": 0.7
+      }
+    ],
+    "frameworks": ["react", "next.js", "express", "fastify", "vue", "angular"],
+    "solution": {
+      "description": "Kill process using the port and restart development server",
+      "steps": [
+        {
+          "type": "command",
+          "description": "Find process using port 3000",
+          "command": "lsof -ti:${port} || netstat -tlnp | grep :${port}",
+          "timeout": 5000
+        },
+        {
+          "type": "command",
+          "description": "Kill process using the port",
+          "command": "pkill -f \"node.*${port}\" || kill -9 $(lsof -ti:${port}) 2>/dev/null || true",
+          "timeout": 5000
+        },
+        {
+          "type": "env_update",
+          "description": "Set alternative port in environment",
+          "file": ".env.local",
+          "variables": {
+            "PORT": "${alternativePort}"
+          }
+        }
+      ],
+      "affectedFiles": [".env.local"]
+    },
+    "validation": {
+      "command": "npm start",
+      "timeout": 15000,
+      "successMessage": "Server started successfully",
+      "successPattern": "ready|listening|compiled|started"
+    },
+    "successRate": 0.92,
+    "totalApplications": 145,
+    "successfulApplications": 133,
+    "created": "2026-02-18T00:00:00.000Z",
+    "lastUpdated": "2026-02-18T00:00:00.000Z"
+  },
+
+  {
+    "id": "missing-dependencies",
+    "name": "Missing Dependencies",
+    "category": "dependencies",
+    "description": "Required packages are not installed or missing from node_modules",
+    "keywords": ["module", "not", "found", "cannot", "resolve", "missing", "dependency"],
+    "errorSignatures": [
+      {
+        "pattern": "Cannot find module '([^']+)'",
+        "weight": 0.9
+      },
+      {
+        "pattern": "Module not found: Error: Can't resolve '([^']+)'",
+        "weight": 0.8
+      },
+      {
+        "pattern": "Cannot resolve dependency '([^']+)'",
+        "weight": 0.7
+      }
+    ],
+    "frameworks": ["react", "next.js", "vue", "angular", "node.js"],
+    "solution": {
+      "description": "Install missing dependencies and clear cache",
+      "steps": [
+        {
+          "type": "command",
+          "description": "Clear npm/yarn cache",
+          "command": "${packageManager} cache clean --force"
+        },
+        {
+          "type": "file_delete",
+          "description": "Remove node_modules",
+          "path": "node_modules"
+        },
+        {
+          "type": "file_delete",
+          "description": "Remove lock file",
+          "path": "${packageManager}-lock.json"
+        },
+        {
+          "type": "package_install",
+          "description": "Reinstall all dependencies",
+          "packages": ""
+        }
+      ],
+      "affectedFiles": ["package.json", "node_modules"]
+    },
+    "validation": {
+      "command": "${packageManager} run build",
+      "timeout": 60000,
+      "successMessage": "Build completed successfully"
+    },
+    "successRate": 0.85,
+    "totalApplications": 89,
+    "successfulApplications": 76
+  },
+
+  {
+    "id": "missing-env-file",
+    "name": "Missing Environment File",
+    "category": "configuration",
+    "description": "Required .env file is missing or environment variables are not set",
+    "keywords": ["env", "environment", "variable", "missing", "undefined", "config"],
+    "errorSignatures": [
+      {
+        "pattern": "Cannot read property.*of undefined.*process\\.env",
+        "weight": 0.7
+      },
+      {
+        "pattern": "Environment variable.*is not defined",
+        "weight": 0.8
+      },
+      {
+        "pattern": "Missing environment variable",
+        "weight": 0.9
+      }
+    ],
+    "frameworks": ["next.js", "react", "express", "fastify"],
+    "solution": {
+      "description": "Create .env file from template or with default values",
+      "steps": [
+        {
+          "type": "file_create",
+          "description": "Copy .env.example to .env.local",
+          "path": ".env.local",
+          "content": "# Environment Variables\nNODE_ENV=development\nPORT=3000\n"
+        },
+        {
+          "type": "env_update",
+          "description": "Add common environment variables",
+          "file": ".env.local",
+          "variables": {
+            "NEXTAUTH_SECRET": "your-secret-here-${randomString}",
+            "NEXTAUTH_URL": "http://localhost:3000",
+            "DATABASE_URL": "postgresql://localhost:5432/mydb"
+          }
+        }
+      ],
+      "affectedFiles": [".env.local", ".env"]
+    },
+    "validation": {
+      "command": "npm run dev",
+      "timeout": 20000,
+      "successMessage": "Development server started"
+    },
+    "successRate": 0.78,
+    "totalApplications": 56,
+    "successfulApplications": 44
+  },
+
+  {
+    "id": "typescript-config-error",
+    "name": "TypeScript Configuration Error",
+    "category": "configuration",
+    "description": "TypeScript configuration file is missing, invalid, or has incorrect settings",
+    "keywords": ["typescript", "tsconfig", "config", "types", "cannot", "find"],
+    "errorSignatures": [
+      {
+        "pattern": "Cannot find type definition file for '([^']+)'",
+        "weight": 0.8
+      },
+      {
+        "pattern": "File '.*tsconfig\\.json' not found",
+        "weight": 0.9
+      },
+      {
+        "pattern": "The 'files' list in config file.*is empty",
+        "weight": 0.7
+      }
+    ],
+    "frameworks": ["next.js", "react", "vue", "angular"],
+    "solution": {
+      "description": "Fix or create proper TypeScript configuration",
+      "steps": [
+        {
+          "type": "file_create",
+          "description": "Create tsconfig.json",
+          "path": "tsconfig.json",
+          "content": "{\n  \"compilerOptions\": {\n    \"target\": \"es5\",\n    \"lib\": [\"dom\", \"dom.iterable\", \"es6\"],\n    \"allowJs\": true,\n    \"skipLibCheck\": true,\n    \"esModuleInterop\": true,\n    \"allowSyntheticDefaultImports\": true,\n    \"strict\": true,\n    \"forceConsistentCasingInFileNames\": true,\n    \"moduleResolution\": \"node\",\n    \"resolveJsonModule\": true,\n    \"isolatedModules\": true,\n    \"noEmit\": true,\n    \"jsx\": \"react-jsx\"\n  },\n  \"include\": [\n    \"src\",\n    \"**/*.ts\",\n    \"**/*.tsx\"\n  ],\n  \"exclude\": [\n    \"node_modules\"\n  ]\n}"
+        },
+        {
+          "type": "package_install",
+          "description": "Install TypeScript types",
+          "packages": "@types/node @types/react @types/react-dom typescript",
+          "dev": true
+        }
+      ],
+      "affectedFiles": ["tsconfig.json", "package.json"]
+    },
+    "validation": {
+      "command": "npx tsc --noEmit",
+      "timeout": 30000,
+      "successMessage": "TypeScript compilation successful"
+    },
+    "successRate": 0.82,
+    "totalApplications": 34,
+    "successfulApplications": 28
+  },
+
+  {
+    "id": "permission-denied",
+    "name": "Permission Denied Error",
+    "category": "filesystem",
+    "description": "Insufficient permissions to read, write, or execute files",
+    "keywords": ["permission", "denied", "EACCES", "EPERM", "access", "forbidden"],
+    "errorSignatures": [
+      {
+        "pattern": "EACCES: permission denied",
+        "weight": 0.9
+      },
+      {
+        "pattern": "EPERM: operation not permitted",
+        "weight": 0.8
+      },
+      {
+        "pattern": "Permission denied.*npm",
+        "weight": 0.7
+      }
+    ],
+    "frameworks": ["all"],
+    "os": ["darwin", "linux"],
+    "solution": {
+      "description": "Fix file permissions and npm global configuration",
+      "steps": [
+        {
+          "type": "permission_fix",
+          "description": "Fix npm global directory permissions",
+          "path": "~/.npm-global",
+          "mode": "755"
+        },
+        {
+          "type": "command",
+          "description": "Configure npm to use different directory",
+          "command": "npm config set prefix ~/.npm-global"
+        },
+        {
+          "type": "command",
+          "description": "Clear npm cache",
+          "command": "npm cache clean --force"
+        }
+      ],
+      "affectedFiles": []
+    },
+    "validation": {
+      "command": "npm list -g --depth=0",
+      "timeout": 10000,
+      "successMessage": "Global packages listed successfully"
+    },
+    "successRate": 0.73,
+    "totalApplications": 42,
+    "successfulApplications": 31
+  },
+
+  {
+    "id": "build-tool-config-error",
+    "name": "Build Tool Configuration Error",
+    "category": "configuration",
+    "description": "Webpack, Vite, or other build tool configuration is missing or incorrect",
+    "keywords": ["webpack", "vite", "build", "config", "bundle", "compilation"],
+    "errorSignatures": [
+      {
+        "pattern": "Configuration file.*not found",
+        "weight": 0.8
+      },
+      {
+        "pattern": "Invalid configuration object",
+        "weight": 0.7
+      },
+      {
+        "pattern": "Failed to load config from",
+        "weight": 0.8
+      }
+    ],
+    "frameworks": ["webpack", "vite", "rollup"],
+    "solution": {
+      "description": "Create or fix build tool configuration",
+      "steps": [
+        {
+          "type": "file_create",
+          "description": "Create basic Vite config",
+          "path": "vite.config.js",
+          "content": "import { defineConfig } from 'vite'\nimport react from '@vitejs/plugin-react'\n\nexport default defineConfig({\n  plugins: [react()],\n  server: {\n    port: 3000\n  }\n})"
+        },
+        {
+          "type": "package_install",
+          "description": "Install Vite and React plugin",
+          "packages": "vite @vitejs/plugin-react",
+          "dev": true
+        }
+      ],
+      "affectedFiles": ["vite.config.js", "package.json"]
+    },
+    "validation": {
+      "command": "npm run build",
+      "timeout": 60000,
+      "successMessage": "Build completed"
+    },
+    "successRate": 0.68,
+    "totalApplications": 25,
+    "successfulApplications": 17
+  },
+
+  {
+    "id": "database-connection-error",
+    "name": "Database Connection Error",
+    "category": "database",
+    "description": "Cannot connect to database server or database configuration is incorrect",
+    "keywords": ["database", "connection", "refused", "timeout", "postgres", "mysql", "mongodb"],
+    "errorSignatures": [
+      {
+        "pattern": "connect ECONNREFUSED.*:5432",
+        "weight": 0.8
+      },
+      {
+        "pattern": "Database connection failed",
+        "weight": 0.7
+      },
+      {
+        "pattern": "Connection terminated unexpectedly",
+        "weight": 0.6
+      }
+    ],
+    "frameworks": ["express", "fastify", "next.js", "prisma"],
+    "solution": {
+      "description": "Check database service and connection configuration",
+      "steps": [
+        {
+          "type": "command",
+          "description": "Check if PostgreSQL is running",
+          "command": "pg_isready -h localhost -p 5432 || brew services start postgresql || systemctl start postgresql"
+        },
+        {
+          "type": "env_update",
+          "description": "Update database connection string",
+          "file": ".env.local",
+          "variables": {
+            "DATABASE_URL": "postgresql://postgres:password@localhost:5432/mydb"
+          }
+        },
+        {
+          "type": "command",
+          "description": "Test database connection",
+          "command": "psql $DATABASE_URL -c 'SELECT version();' || echo 'Database connection test failed'"
+        }
+      ],
+      "affectedFiles": [".env.local"]
+    },
+    "validation": {
+      "command": "npm run db:migrate || npx prisma migrate deploy || echo 'No migration command found'",
+      "timeout": 30000,
+      "successMessage": "Database operations successful"
+    },
+    "successRate": 0.61,
+    "totalApplications": 38,
+    "successfulApplications": 23
+  },
+
+  {
+    "id": "eslint-config-error",
+    "name": "ESLint Configuration Error",
+    "category": "linting",
+    "description": "ESLint configuration file is missing, invalid, or has conflicting rules",
+    "keywords": ["eslint", "linting", "config", "rules", "extends", "parser"],
+    "errorSignatures": [
+      {
+        "pattern": "Cannot find module 'eslint-config-",
+        "weight": 0.8
+      },
+      {
+        "pattern": "ESLint configuration.*is invalid",
+        "weight": 0.9
+      },
+      {
+        "pattern": "Failed to load config.*extends",
+        "weight": 0.7
+      }
+    ],
+    "frameworks": ["react", "next.js", "vue", "angular"],
+    "solution": {
+      "description": "Fix or create proper ESLint configuration",
+      "steps": [
+        {
+          "type": "package_install",
+          "description": "Install ESLint and common configs",
+          "packages": "eslint eslint-config-next @typescript-eslint/eslint-plugin @typescript-eslint/parser",
+          "dev": true
+        },
+        {
+          "type": "file_create",
+          "description": "Create .eslintrc.json",
+          "path": ".eslintrc.json",
+          "content": "{\n  \"extends\": \"next/core-web-vitals\",\n  \"rules\": {\n    \"@next/next/no-html-link-for-pages\": \"off\"\n  }\n}"
+        }
+      ],
+      "affectedFiles": [".eslintrc.json", "package.json"]
+    },
+    "validation": {
+      "command": "npx eslint --version",
+      "timeout": 10000,
+      "successMessage": "ESLint configuration valid"
+    },
+    "successRate": 0.79,
+    "totalApplications": 31,
+    "successfulApplications": 24
+  },
+
+  {
+    "id": "git-repository-error",
+    "name": "Git Repository Error",
+    "category": "version-control",
+    "description": "Git repository is corrupted, not initialized, or has configuration issues",
+    "keywords": ["git", "repository", "not", "found", "fatal", "corrupt", "index"],
+    "errorSignatures": [
+      {
+        "pattern": "fatal: not a git repository",
+        "weight": 0.9
+      },
+      {
+        "pattern": "fatal: index file corrupt",
+        "weight": 0.8
+      },
+      {
+        "pattern": "error: bad index file sha1 signature",
+        "weight": 0.7
+      }
+    ],
+    "frameworks": ["all"],
+    "solution": {
+      "description": "Initialize or repair Git repository",
+      "steps": [
+        {
+          "type": "command",
+          "description": "Initialize Git repository",
+          "command": "git init"
+        },
+        {
+          "type": "file_create",
+          "description": "Create .gitignore",
+          "path": ".gitignore",
+          "content": "node_modules/\n.env.local\n.env\n.next/\ndist/\nbuild/\n*.log\n.DS_Store\n"
+        },
+        {
+          "type": "command",
+          "description": "Add initial commit",
+          "command": "git add . && git commit -m 'Initial commit'"
+        }
+      ],
+      "affectedFiles": [".git", ".gitignore"]
+    },
+    "validation": {
+      "command": "git status",
+      "timeout": 5000,
+      "successMessage": "Git repository working correctly"
+    },
+    "successRate": 0.88,
+    "totalApplications": 22,
+    "successfulApplications": 19
+  },
+
+  {
+    "id": "next-hydration-error",
+    "name": "Next.js Hydration Error",
+    "category": "framework-specific",
+    "description": "React hydration mismatch between server and client rendering",
+    "keywords": ["hydration", "mismatch", "server", "client", "next.js", "react"],
+    "errorSignatures": [
+      {
+        "pattern": "Hydration failed because the initial UI does not match",
+        "weight": 0.9
+      },
+      {
+        "pattern": "Text content does not match server-rendered HTML",
+        "weight": 0.8
+      },
+      {
+        "pattern": "Warning: Expected server HTML to contain",
+        "weight": 0.7
+      }
+    ],
+    "frameworks": ["next.js"],
+    "solution": {
+      "description": "Fix hydration mismatches and suppress false warnings",
+      "steps": [
+        {
+          "type": "config_update",
+          "description": "Update Next.js config to suppress hydration warnings",
+          "file": "next.config.js",
+          "updates": {
+            "reactStrictMode": true,
+            "experimental": {
+              "suppressHydrationWarning": true
+            }
+          }
+        },
+        {
+          "type": "command",
+          "description": "Clear Next.js cache",
+          "command": "rm -rf .next && npm run build"
+        }
+      ],
+      "affectedFiles": ["next.config.js", ".next"]
+    },
+    "validation": {
+      "command": "npm run dev",
+      "timeout": 20000,
+      "successMessage": "Next.js development server started"
+    },
+    "successRate": 0.71,
+    "totalApplications": 18,
+    "successfulApplications": 13
+  }
+]

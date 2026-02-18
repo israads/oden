@@ -1,0 +1,450 @@
+{
+  "default": {
+    "business_value": {
+      "question": "What specific business value will {featureName} provide to your organization?",
+      "context": "Understanding business value helps prioritize features and measure ROI",
+      "priority": "high",
+      "expectedAnswerType": "business_impact",
+      "options": [
+        "Increase revenue through new capabilities",
+        "Reduce operational costs or inefficiencies",
+        "Improve customer satisfaction and retention",
+        "Enable new business opportunities",
+        "Competitive advantage or differentiation"
+      ]
+    },
+    "user_impact": {
+      "question": "How will {featureName} improve the experience for your users?",
+      "context": "User impact drives adoption and satisfaction metrics",
+      "priority": "high",
+      "expectedAnswerType": "user_benefit",
+      "options": [
+        "Solve a critical user pain point",
+        "Make existing tasks faster or easier",
+        "Enable new capabilities users want",
+        "Improve overall product usability",
+        "Enhance user engagement and retention"
+      ]
+    },
+    "success_metrics": {
+      "question": "What specific, measurable outcomes will indicate that {featureName} is successful?",
+      "context": "Clear success metrics guide development priorities and validate business impact",
+      "priority": "high",
+      "expectedAnswerType": "measurable_goals"
+    },
+    "technical_feasibility": {
+      "question": "What technical constraints, dependencies, or requirements should be considered for {featureName}?",
+      "context": "Technical feasibility affects timeline, resources, and architectural decisions",
+      "priority": "high",
+      "expectedAnswerType": "technical_requirements"
+    },
+    "user_experience": {
+      "question": "What should the ideal user experience flow be like for {featureName}?",
+      "context": "UX requirements inform design decisions and development approach",
+      "priority": "medium",
+      "expectedAnswerType": "ux_requirements"
+    },
+    "competitive_considerations": {
+      "question": "How does {featureName} compare to what competitors offer, and what's your differentiation strategy?",
+      "context": "Competitive analysis helps identify differentiation opportunities and market positioning",
+      "priority": "medium",
+      "expectedAnswerType": "competitive_analysis"
+    },
+    "integration_requirements": {
+      "question": "What existing systems, services, or data sources will {featureName} need to integrate with?",
+      "context": "Integration requirements affect architecture complexity and development timeline",
+      "priority": "medium",
+      "expectedAnswerType": "integration_needs"
+    },
+    "scalability_requirements": {
+      "question": "What are the expected usage patterns, user volume, and performance requirements for {featureName}?",
+      "context": "Scale requirements influence architecture decisions and infrastructure planning",
+      "priority": "medium",
+      "expectedAnswerType": "scale_expectations"
+    },
+    "security_considerations": {
+      "question": "What security, privacy, or compliance requirements apply to {featureName}?",
+      "context": "Security requirements affect architecture design and implementation approach",
+      "priority": "medium",
+      "expectedAnswerType": "security_requirements",
+      "options": [
+        "GDPR compliance for EU users",
+        "HIPAA compliance for health data",
+        "SOC 2 for business customers",
+        "Industry-specific regulations",
+        "Basic security best practices",
+        "No specific compliance requirements"
+      ]
+    },
+    "accessibility_considerations": {
+      "question": "What accessibility requirements should {featureName} meet?",
+      "context": "Accessibility requirements affect UI design and implementation complexity",
+      "priority": "medium",
+      "expectedAnswerType": "accessibility_needs",
+      "options": [
+        "WCAG 2.1 AA compliance",
+        "Screen reader compatibility",
+        "Keyboard navigation support",
+        "High contrast mode support",
+        "Basic accessibility best practices",
+        "No specific accessibility requirements"
+      ]
+    },
+    "performance_requirements": {
+      "question": "What performance benchmarks or response time requirements are critical for {featureName}?",
+      "context": "Performance requirements guide technical architecture and optimization priorities",
+      "priority": "medium",
+      "expectedAnswerType": "performance_targets"
+    },
+    "platform_considerations": {
+      "question": "Which platforms or devices should {featureName} support?",
+      "context": "Platform support affects development approach and resource requirements",
+      "priority": "medium",
+      "expectedAnswerType": "platform_requirements",
+      "options": [
+        "Desktop web browsers only",
+        "Mobile-responsive web",
+        "Native mobile apps (iOS/Android)",
+        "Cross-platform (web + mobile)",
+        "Progressive Web App (PWA)",
+        "Platform-specific optimizations needed"
+      ]
+    },
+    "dependency_management": {
+      "question": "What external dependencies, APIs, or third-party services will {featureName} rely on?",
+      "context": "External dependencies affect reliability, costs, and integration complexity",
+      "priority": "low",
+      "expectedAnswerType": "external_dependencies"
+    },
+    "business_requirements": {
+      "question": "What business rules, workflows, or processes must {featureName} support?",
+      "context": "Business requirements define functional scope and complexity",
+      "priority": "medium",
+      "expectedAnswerType": "business_logic"
+    },
+    "api_considerations": {
+      "question": "What API design principles or developer experience requirements are important for {featureName}?",
+      "context": "API design affects developer adoption and long-term maintainability",
+      "priority": "medium",
+      "expectedAnswerType": "api_requirements"
+    }
+  },
+
+  "authentication": {
+    "security_requirements": {
+      "question": "What security standards and compliance requirements must the authentication system meet?",
+      "context": "Authentication security directly impacts user trust and regulatory compliance",
+      "priority": "high",
+      "expectedAnswerType": "security_standards",
+      "options": [
+        "Multi-factor authentication (MFA)",
+        "OAuth 2.0 / OpenID Connect standards",
+        "Password complexity requirements",
+        "Session management and timeout",
+        "Account lockout and rate limiting",
+        "GDPR/CCPA compliance for user data"
+      ]
+    },
+    "user_experience": {
+      "question": "What should the authentication user experience prioritize for your {businessContext} users?",
+      "context": "Authentication UX significantly impacts user conversion and retention rates",
+      "priority": "high",
+      "expectedAnswerType": "auth_ux_priorities",
+      "options": [
+        "Fastest possible signup/login flow",
+        "Social login options (Google, GitHub, etc.)",
+        "Passwordless authentication (magic links)",
+        "Progressive profile completion",
+        "Single sign-on (SSO) for business users",
+        "Remember me / persistent sessions"
+      ]
+    },
+    "integration_strategy": {
+      "question": "How should the authentication system integrate with your existing {framework} application?",
+      "context": "Authentication integration affects user data flow and system architecture",
+      "priority": "medium",
+      "expectedAnswerType": "auth_integration"
+    }
+  },
+
+  "payment": {
+    "compliance_requirements": {
+      "question": "What payment compliance standards and regulations must {featureName} meet?",
+      "context": "Payment compliance is legally required and affects architecture decisions",
+      "priority": "high",
+      "expectedAnswerType": "payment_compliance",
+      "options": [
+        "PCI DSS Level 1 (if storing card data)",
+        "PCI DSS SAQ A (tokenized payments only)",
+        "Strong Customer Authentication (SCA) for EU",
+        "Anti-money laundering (AML) requirements",
+        "Tax calculation and reporting",
+        "Regional payment regulations"
+      ]
+    },
+    "financial_impact": {
+      "question": "What are the expected financial metrics and business impact of {featureName}?",
+      "context": "Payment features have direct revenue impact and cost implications",
+      "priority": "high",
+      "expectedAnswerType": "financial_projections",
+      "options": [
+        "Expected transaction volume per month",
+        "Average transaction value",
+        "Revenue increase projections",
+        "Payment processing cost budget",
+        "International sales percentage",
+        "Subscription vs one-time payments"
+      ]
+    },
+    "payment_methods": {
+      "question": "Which payment methods and currencies should {featureName} support?",
+      "context": "Payment method support affects user conversion and international reach",
+      "priority": "medium",
+      "expectedAnswerType": "payment_options",
+      "options": [
+        "Credit/debit cards (Visa, MasterCard, Amex)",
+        "Digital wallets (PayPal, Apple Pay, Google Pay)",
+        "Bank transfers (ACH, SEPA)",
+        "Buy now, pay later (Klarna, Afterpay)",
+        "Cryptocurrency payments",
+        "Regional payment methods"
+      ]
+    }
+  },
+
+  "user_interface": {
+    "accessibility_requirements": {
+      "question": "What accessibility standards and user needs should {featureName} address?",
+      "context": "Accessibility requirements affect design decisions and development approach",
+      "priority": "high",
+      "expectedAnswerType": "accessibility_standards",
+      "options": [
+        "WCAG 2.1 AA compliance",
+        "Screen reader optimization",
+        "Keyboard-only navigation support",
+        "High contrast and color accessibility",
+        "Mobile accessibility considerations",
+        "Multilingual support needs"
+      ]
+    },
+    "responsive_design": {
+      "question": "How should {featureName} adapt across different screen sizes and devices?",
+      "context": "Responsive design affects user experience and development complexity",
+      "priority": "medium",
+      "expectedAnswerType": "responsive_strategy",
+      "options": [
+        "Mobile-first responsive design",
+        "Separate mobile and desktop experiences",
+        "Progressive enhancement approach",
+        "Touch-optimized interactions",
+        "Offline functionality needs",
+        "App-like mobile experience"
+      ]
+    },
+    "design_system_integration": {
+      "question": "How should {featureName} integrate with your existing design system and brand?",
+      "context": "Design system integration affects consistency and development efficiency",
+      "priority": "medium",
+      "expectedAnswerType": "design_integration"
+    }
+  },
+
+  "api_integration": {
+    "design_principles": {
+      "question": "What API design principles and developer experience standards should {featureName} follow?",
+      "context": "API design affects developer adoption, maintainability, and long-term success",
+      "priority": "high",
+      "expectedAnswerType": "api_design_standards",
+      "options": [
+        "RESTful API with clear resource modeling",
+        "GraphQL for flexible data querying",
+        "Real-time capabilities (WebSockets, SSE)",
+        "Comprehensive OpenAPI documentation",
+        "SDK/client library support",
+        "Webhook system for event notifications"
+      ]
+    },
+    "developer_experience": {
+      "question": "What developer experience features are most important for {featureName} API users?",
+      "context": "Developer experience directly impacts API adoption and integration success",
+      "priority": "high",
+      "expectedAnswerType": "dx_priorities",
+      "options": [
+        "Interactive API documentation and testing",
+        "Code examples in multiple languages",
+        "Sandbox/testing environment access",
+        "Clear error messages and debugging info",
+        "Rate limiting with clear feedback",
+        "API versioning and migration guides"
+      ]
+    },
+    "security_strategy": {
+      "question": "What security and authentication strategy should {featureName} API implement?",
+      "context": "API security affects data protection and compliance requirements",
+      "priority": "high",
+      "expectedAnswerType": "api_security",
+      "options": [
+        "API key authentication",
+        "OAuth 2.0 with scoped permissions",
+        "JWT tokens with refresh mechanism",
+        "IP whitelisting for sensitive operations",
+        "Request signing for data integrity",
+        "Rate limiting and DDoS protection"
+      ]
+    }
+  },
+
+  "analytics": {
+    "data_privacy": {
+      "question": "What data privacy and user consent requirements apply to {featureName} analytics?",
+      "context": "Analytics privacy affects data collection strategy and compliance",
+      "priority": "high",
+      "expectedAnswerType": "privacy_requirements",
+      "options": [
+        "GDPR consent requirements for EU users",
+        "CCPA compliance for California users",
+        "Cookie consent and management",
+        "Data anonymization and retention policies",
+        "User data export and deletion rights",
+        "No personal data collection approach"
+      ]
+    },
+    "metrics_strategy": {
+      "question": "What specific metrics and insights should {featureName} capture and analyze?",
+      "context": "Metrics strategy defines data collection scope and analysis capabilities",
+      "priority": "high",
+      "expectedAnswerType": "analytics_metrics"
+    }
+  },
+
+  "communication": {
+    "delivery_requirements": {
+      "question": "What delivery reliability and timing requirements are critical for {featureName}?",
+      "context": "Communication delivery affects user experience and business operations",
+      "priority": "high",
+      "expectedAnswerType": "delivery_standards",
+      "options": [
+        "Real-time delivery (within seconds)",
+        "Near real-time (within minutes)",
+        "Scheduled delivery capabilities",
+        "Delivery confirmation and tracking",
+        "Fallback delivery methods",
+        "Retry and error handling strategy"
+      ]
+    },
+    "personalization_needs": {
+      "question": "What level of personalization and targeting should {featureName} support?",
+      "context": "Personalization affects user engagement but increases system complexity",
+      "priority": "medium",
+      "expectedAnswerType": "personalization_strategy"
+    }
+  },
+
+  "frameworks": {
+    "nextjs": {
+      "seo_requirements": {
+        "question": "What SEO optimization strategy should {featureName} implement in your Next.js application?",
+        "context": "Next.js SEO capabilities affect page rendering strategy and performance",
+        "priority": "high",
+        "expectedAnswerType": "seo_strategy",
+        "options": [
+          "Static generation (SSG) for all pages",
+          "Server-side rendering (SSR) for dynamic content",
+          "Hybrid approach (SSG + ISR)",
+          "Dynamic sitemap generation",
+          "Open Graph and meta tag optimization",
+          "Schema markup for rich snippets"
+        ]
+      },
+      "ssr_considerations": {
+        "question": "How should {featureName} handle server-side rendering and client-side hydration?",
+        "context": "SSR strategy affects performance, SEO, and development complexity",
+        "priority": "medium",
+        "expectedAnswerType": "ssr_strategy"
+      }
+    },
+    "mobile": {
+      "platform_requirements": {
+        "question": "Which mobile platforms and versions should {featureName} support?",
+        "context": "Platform support affects development approach and user reach",
+        "priority": "high",
+        "expectedAnswerType": "platform_support",
+        "options": [
+          "iOS 14+ and Android 10+",
+          "Current iOS/Android versions only",
+          "Broader compatibility (iOS 12+, Android 8+)",
+          "Tablet optimization required",
+          "Specific device form factors",
+          "Cross-platform feature parity"
+        ]
+      },
+      "native_features": {
+        "question": "Which native device capabilities does {featureName} need to access?",
+        "context": "Native features affect development complexity and user experience",
+        "priority": "medium",
+        "expectedAnswerType": "native_capabilities",
+        "options": [
+          "Push notifications",
+          "Camera and photo gallery access",
+          "GPS and location services",
+          "Biometric authentication",
+          "Offline data storage",
+          "Background processing",
+          "Device sensors"
+        ]
+      }
+    },
+    "backend": {
+      "api_design": {
+        "question": "What API architecture and design patterns should {featureName} follow in your {framework} backend?",
+        "context": "Backend API design affects scalability, maintainability, and performance",
+        "priority": "high",
+        "expectedAnswerType": "backend_architecture"
+      },
+      "scalability": {
+        "question": "What scalability and performance requirements should the {featureName} backend architecture support?",
+        "context": "Scalability requirements influence architecture decisions and infrastructure needs",
+        "priority": "high",
+        "expectedAnswerType": "scalability_needs"
+      }
+    }
+  },
+
+  "business": {
+    "b2b_requirements": {
+      "question": "What B2B-specific features and capabilities should {featureName} include?",
+      "context": "B2B features typically require more sophisticated user management and permissions",
+      "priority": "high",
+      "expectedAnswerType": "b2b_features",
+      "options": [
+        "Multi-tenant organization support",
+        "Role-based access control (RBAC)",
+        "Single sign-on (SSO) integration",
+        "Usage analytics and reporting",
+        "API access for custom integrations",
+        "White-label customization options"
+      ]
+    },
+    "competitive_analysis": {
+      "question": "Which competitors offer similar functionality to {featureName}, and how will you differentiate?",
+      "context": "Competitive analysis helps identify market opportunities and positioning strategy",
+      "priority": "medium",
+      "expectedAnswerType": "competitive_positioning"
+    }
+  },
+
+  "integration": {
+    "existing_systems": {
+      "question": "How should {featureName} integrate with your existing systems and data workflows?",
+      "context": "System integration affects data consistency and operational efficiency",
+      "priority": "high",
+      "expectedAnswerType": "system_integration"
+    },
+    "external_dependencies": {
+      "question": "What external services, APIs, or third-party tools will {featureName} depend on?",
+      "context": "External dependencies affect reliability, costs, and vendor management",
+      "priority": "medium",
+      "expectedAnswerType": "external_services"
+    }
+  }
+}
