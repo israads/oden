@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Oden Forge Dashboard - Real-time Agent Monitoring</title>
+  <meta name="description" content="Real-time monitoring dashboard for Oden Forge development agents, task queues, and performance metrics.">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" href="/favicon.png">
+
+  <!-- Tailwind CSS CDN for quick setup -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'oden-blue': '#3B82F6',
+            'oden-green': '#10B981',
+            'oden-purple': '#8B5CF6'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- React and ReactDOM CDN for quick setup -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+  <!-- Babel for JSX transformation -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    /* Loading animation */
+    .loading-spinner {
+      border: 4px solid #f3f4f6;
+      border-top: 4px solid #3B82F6;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Custom scrollbar for webkit browsers */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 4px;
+    }
+
+    .dark ::-webkit-scrollbar-track {
+      background: #374151;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    .dark ::-webkit-scrollbar-thumb {
+      background: #6b7280;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    .dark ::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+
+    /* Smooth transitions */
+    * {
+      transition-property: color, background-color, border-color;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-duration: 200ms;
+    }
+
+    /* Focus styles for accessibility */
+    .focus\:outline-none:focus {
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+    }
+
+    .focus\:ring-2:focus {
+      --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+      --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+      box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading screen -->
+  <div id="loading" class="fixed inset-0 bg-white dark:bg-gray-900 flex items-center justify-center z-50">
+    <div class="text-center">
+      <div class="loading-spinner mx-auto mb-4"></div>
+      <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+        ⚡ Oden Forge Dashboard
+      </h2>
+      <p class="text-gray-600 dark:text-gray-400">
+        Connecting to monitoring server...
+      </p>
+    </div>
+  </div>
+
+  <!-- Main app container -->
+  <div id="root"></div>
+
+  <!-- Error fallback -->
+  <div id="error" class="hidden fixed inset-0 bg-white dark:bg-gray-900 flex items-center justify-center z-50">
+    <div class="text-center max-w-md mx-auto px-4">
+      <div class="text-6xl mb-4">⚠️</div>
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+        Dashboard Error
+      </h2>
+      <p class="text-gray-600 dark:text-gray-400 mb-6">
+        Failed to load the dashboard. Please check if the server is running and refresh the page.
+      </p>
+      <button
+        onclick="window.location.reload()"
+        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+      >
+        Reload Dashboard
+      </button>
+    </div>
+  </div>
+
+  <script type="text/babel" data-type="module">
+    // Import components (these would be loaded as modules in production)
+    const { useState, useEffect, useRef, useCallback, useMemo } = React;
+
+    // WebSocket Hook
+    const useWebSocket = (url = 'ws://localhost:3333') => {
+      const [connectionStatus, setConnectionStatus] = useState('Connecting');
+      const [data, setData] = useState({
+        agents: [],
+        tasks: [],
+        performance: {}
+      });
+      const [lastMessage, setLastMessage] = useState(null);
+
+      const ws = useRef(null);
+      const reconnectAttempts = useRef(0);
+      const reconnectTimeout = useRef(null);
+
+      const connect = useCallback(() => {
+        try {
+          ws.current = new WebSocket(url);
+
+          ws.current.onopen = () => {
+            console.log('🔌 WebSocket connected');
+            setConnectionStatus('Connected');
+            reconnectAttempts.current = 0;
+          };
+
+          ws.current.onmessage = (event) => {
+            try {
+              const message = JSON.parse(event.data);
+              setLastMessage(message);
+
+              switch (message.type) {
+                case 'initial_data':
+                case 'data_update':
+                  setData(message.data);
+                  break;
+                case 'agent_status_update':
+                  setData(prev => ({
+                    ...prev,
+                    agents: prev.agents.map(agent =>
+                      agent.id === message.data.agentId
+                        ? { ...agent, ...message.data }
+                        : agent
+                    )
+                  }));
+                  break;
+                default:
+                  console.log('Unknown message type:', message.type);
+              }
+            } catch (error) {
+              console.error('Error parsing WebSocket message:', error);
+            }
+          };
+
+          ws.current.onclose = (event) => {
+            console.log('🔌 WebSocket disconnected:', event.code);
+            setConnectionStatus('Disconnected');
+
+            if (reconnectAttempts.current < 10) {
+              reconnectAttempts.current++;
+              reconnectTimeout.current = setTimeout(() => {
+                setConnectionStatus('Reconnecting');
+                connect();
+              }, 5000);
+            } else {
+              setConnectionStatus('Failed');
+            }
+          };
+
+          ws.current.onerror = (error) => {
+            console.error('WebSocket error:', error);
+            setConnectionStatus('Error');
+          };
+
+        } catch (error) {
+          console.error('Failed to create WebSocket connection:', error);
+          setConnectionStatus('Error');
+        }
+      }, [url]);
+
+      const sendMessage = useCallback((message) => {
+        if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+          ws.current.send(JSON.stringify(message));
+          return true;
+        }
+        return false;
+      }, []);
+
+      useEffect(() => {
+        connect();
+        return () => {
+          if (reconnectTimeout.current) {
+            clearTimeout(reconnectTimeout.current);
+          }
+          if (ws.current) {
+            ws.current.close();
+          }
+        };
+      }, [connect]);
+
+      return {
+        connectionStatus,
+        data,
+        lastMessage,
+        sendMessage,
+        pauseTask: (taskId) => sendMessage({ type: 'pause_task', taskId }),
+        resumeTask: (taskId) => sendMessage({ type: 'resume_task', taskId }),
+        reorderTasks: (taskIds) => sendMessage({ type: 'reorder_tasks', taskIds }),
+        restartAgent: (agentId) => sendMessage({ type: 'restart_agent', agentId })
+      };
+    };
+
+    // Simple Dashboard App
+    const Dashboard = () => {
+      const {
+        connectionStatus,
+        data,
+        pauseTask,
+        resumeTask,
+        reorderTasks,
+        restartAgent
+      } = useWebSocket();
+
+      const [darkMode, setDarkMode] = useState(() => {
+        const saved = localStorage.getItem('darkMode');
+        return saved ? JSON.parse(saved) : false;
+      });
+
+      useEffect(() => {
+        localStorage.setItem('darkMode', JSON.stringify(darkMode));
+        if (darkMode) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      }, [darkMode]);
+
+      // Hide loading screen once connected or failed
+      useEffect(() => {
+        if (connectionStatus !== 'Connecting') {
+          const loading = document.getElementById('loading');
+          if (loading) {
+            loading.style.display = 'none';
+          }
+        }
+      }, [connectionStatus]);
+
+      return (
+        <div className={`min-h-screen transition-colors duration-200 ${
+          darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'
+        }`}>
+          {/* Header */}
+          <header className={`shadow-sm border-b transition-colors duration-200 ${
+            darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+          }`}>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex justify-between items-center h-16">
+                <div className="flex items-center space-x-4">
+                  <h1 className="text-xl font-bold text-blue-600">⚡ Oden Forge Dashboard</h1>
+                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                    connectionStatus === 'Connected'
+                      ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
+                      : connectionStatus === 'Connecting' || connectionStatus === 'Reconnecting'
+                      ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300'
+                      : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'
+                  }`}>
+                    {connectionStatus === 'Connected' ? '🟢' :
+                     connectionStatus === 'Connecting' || connectionStatus === 'Reconnecting' ? '🟡' : '🔴'}
+                    {connectionStatus}
+                  </span>
+                </div>
+
+                <div className="flex items-center space-x-4">
+                  <button
+                    onClick={() => setDarkMode(!darkMode)}
+                    className={`p-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                      darkMode
+                        ? 'bg-gray-700 text-gray-200 hover:bg-gray-600'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    {darkMode ? '☀️' : '🌙'}
+                  </button>
+                  <button
+                    onClick={() => window.location.reload()}
+                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                      darkMode
+                        ? 'bg-gray-700 text-gray-200 hover:bg-gray-600'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    🔄 Refresh
+                  </button>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          {/* Main content */}
+          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {connectionStatus === 'Failed' && (
+              <div className="mb-6 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-md p-4">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <span className="text-red-400">⚠️</span>
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-red-800 dark:text-red-200">
+                      Connection Failed
+                    </h3>
+                    <div className="mt-2 text-sm text-red-700 dark:text-red-300">
+                      <p>Unable to connect to dashboard server on localhost:3333.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Quick overview */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              {/* Agents summary */}
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <div className="flex items-center">
+                  <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900/30">
+                    <span className="text-xl">🤖</span>
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Agents</p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                      {data.agents?.length || 0}
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-500">
+                      {data.agents?.filter(a => a.status === 'running').length || 0} running
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Tasks summary */}
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <div className="flex items-center">
+                  <div className="p-3 rounded-full bg-green-100 dark:bg-green-900/30">
+                    <span className="text-xl">📋</span>
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Tasks</p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                      {data.tasks?.length || 0}
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-500">
+                      {data.tasks?.filter(t => t.status === 'in-progress').length || 0} active
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Performance summary */}
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <div className="flex items-center">
+                  <div className="p-3 rounded-full bg-purple-100 dark:bg-purple-900/30">
+                    <span className="text-xl">📈</span>
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Success Rate</p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                      {Math.round(data.performance?.successRate || 0)}%
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-500">
+                      {data.performance?.completedTasks || 0} completed
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Agent list */}
+            {data.agents && data.agents.length > 0 && (
+              <div className="mb-8">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                  Active Agents
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {data.agents.map(agent => (
+                    <div
+                      key={agent.id}
+                      className="bg-white dark:bg-gray-800 rounded-lg shadow border-l-4 border-l-blue-500 p-4"
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-medium text-gray-900 dark:text-gray-100">
+                          {agent.id.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                        </h3>
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${
+                          agent.status === 'running'
+                            ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
+                            : agent.status === 'idle'
+                            ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
+                            : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                        }`}>
+                          {agent.status}
+                        </span>
+                      </div>
+
+                      {agent.progress !== undefined && (
+                        <div className="mb-2">
+                          <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+                            <span>Progress</span>
+                            <span>{agent.progress}%</span>
+                          </div>
+                          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                            <div
+                              className="bg-blue-600 h-2 rounded-full"
+                              style={{ width: `${agent.progress}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      )}
+
+                      {agent.currentTask && (
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          {agent.currentTask}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Task queue */}
+            {data.tasks && data.tasks.length > 0 && (
+              <div>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                  Task Queue
+                </h2>
+                <div className="space-y-2">
+                  {data.tasks.slice(0, 5).map(task => (
+                    <div
+                      key={task.id}
+                      className="bg-white dark:bg-gray-800 rounded-lg shadow p-4"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <h3 className="font-medium text-gray-900 dark:text-gray-100">
+                            {task.title}
+                          </h3>
+                          <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+                            <span className="font-medium">P{task.priority}</span>
+                            {task.estimatedTime && <span>⏱️ {task.estimatedTime}</span>}
+                            {task.stream && <span>{task.stream}</span>}
+                          </div>
+                        </div>
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${
+                          task.status === 'in-progress'
+                            ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
+                            : task.status === 'completed'
+                            ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
+                            : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                        }`}>
+                          {task.status.replace('-', ' ')}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                  {data.tasks.length > 5 && (
+                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
+                      ... and {data.tasks.length - 5} more tasks
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Empty state */}
+            {(!data.agents || data.agents.length === 0) && (!data.tasks || data.tasks.length === 0) && (
+              <div className="text-center py-12">
+                <div className="text-6xl mb-4">🚀</div>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                  Dashboard Ready
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-6">
+                  Start using Oden Forge commands to see real-time monitoring data here.
+                </p>
+                <div className="text-sm text-gray-500 dark:text-gray-500">
+                  Try running: <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">/oden:work [epic]</code>
+                </div>
+              </div>
+            )}
+          </main>
+        </div>
+      );
+    };
+
+    // Error boundary
+    class ErrorBoundary extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = { hasError: false };
+      }
+
+      static getDerivedStateFromError(error) {
+        return { hasError: true };
+      }
+
+      componentDidCatch(error, errorInfo) {
+        console.error('Dashboard error:', error, errorInfo);
+      }
+
+      render() {
+        if (this.state.hasError) {
+          document.getElementById('error').classList.remove('hidden');
+          return null;
+        }
+
+        return this.props.children;
+      }
+    }
+
+    // Mount the app
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(
+      <ErrorBoundary>
+        <Dashboard />
+      </ErrorBoundary>
+    );
+  </script>
+</body>
+</html>
