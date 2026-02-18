@@ -1,0 +1,78 @@
+{
+  "version": "1.0",
+  "description": "Oden Pipeline Configuration - Specialized Agent Orchestration",
+  "stages": {
+    "pre-commit": {
+      "enabled": true,
+      "description": "Quick validation before commits",
+      "agents": ["security", "quality"],
+      "failOnCritical": true,
+      "timeout": 60000,
+      "concurrent": true
+    },
+    "pre-pr": {
+      "enabled": true,
+      "description": "Comprehensive analysis before pull requests",
+      "agents": ["security", "performance", "accessibility", "quality"],
+      "failOnCritical": true,
+      "timeout": 180000,
+      "concurrent": true
+    },
+    "pre-deploy": {
+      "enabled": true,
+      "description": "Full analysis before deployment",
+      "agents": ["security", "performance", "accessibility", "seo", "quality"],
+      "failOnCritical": false,
+      "timeout": 300000,
+      "concurrent": true
+    }
+  },
+  "thresholds": {
+    "security": {
+      "critical": 0,
+      "high": 5,
+      "description": "Security violations tolerance"
+    },
+    "performance": {
+      "critical": 0,
+      "high": 10,
+      "description": "Performance issues tolerance"
+    },
+    "accessibility": {
+      "critical": 0,
+      "high": 10,
+      "description": "Accessibility violations tolerance"
+    },
+    "seo": {
+      "critical": 0,
+      "high": 5,
+      "description": "SEO issues tolerance"
+    },
+    "quality": {
+      "critical": 0,
+      "high": 15,
+      "description": "Code quality issues tolerance"
+    }
+  },
+  "reporting": {
+    "format": "detailed",
+    "saveReports": true,
+    "outputDir": ".oden-analysis",
+    "includeRecommendations": true,
+    "includeMetadata": true,
+    "generateMarkdown": true
+  },
+  "integration": {
+    "enableDocumentationAudit": true,
+    "workIntegration": true,
+    "architectIntegration": true
+  },
+  "customization": {
+    "projectType": "auto-detect",
+    "framework": "auto-detect",
+    "skipAgentsForFramework": {
+      "api-only": ["seo", "accessibility"],
+      "cli-tool": ["seo", "accessibility", "performance"]
+    }
+  }
+}
