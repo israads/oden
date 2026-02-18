@@ -77,6 +77,7 @@
       "oden:work",
       "oden:sync",
       "oden:mcp",
+      "oden:export",
       "oden:help"
     ],
     "version-check": true,
