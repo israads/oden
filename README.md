@@ -1,10 +1,43 @@
-# Oden Forge
+# Oden Forge - Experimental Fork 🧪
 
+[![Original Repository](https://img.shields.io/badge/Original-javikin%2Foden-blue)](https://github.com/javikin/oden)
 [![NPM Version](https://img.shields.io/npm/v/oden-forge)](https://npmjs.com/package/oden-forge)
-[![Downloads](https://img.shields.io/npm/dm/oden-forge)](https://npmjs.com/package/oden-forge)
+[![Experimental](https://img.shields.io/badge/Status-Experimental-orange)](https://github.com/israads/oden)
 [![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://javikin.github.io/oden-forge)
 
+> **🚨 EXPERIMENTAL FORK**: Este es un fork experimental de [Oden Forge](https://github.com/javikin/oden) creado por [@javikin](https://github.com/javikin) para probar mejoras y nuevas funcionalidades que eventualmente serán propuestas al repositorio original.
+
 **Sistema de skills para Claude Code que implementa la metodología Documentation-First Development**
+
+## 🎉 Créditos al Autor Original
+
+**Oden Forge** fue creado originalmente por **[@javikin](https://github.com/javikin)**. Todo el mérito del concepto, metodología Documentation-First Development y la arquitectura base pertenece al autor original.
+
+- **Repositorio Original**: https://github.com/javikin/oden
+- **Autor**: [@javikin](https://github.com/javikin)
+- **Licencia**: MIT License
+
+## 🧪 Mejoras Experimentales en Este Fork
+
+Este fork incluye **8 funcionalidades experimentales** desarrolladas para explorar mejoras al sistema original:
+
+### 🆕 Funcionalidades Añadidas (v3.0.0-experimental)
+
+1. **`/oden:bug`** - Sistema de diagnóstico contextual con 50+ patrones de error
+2. **`/oden:brainstorm`** - Motor de brainstorming inteligente con preguntas contextuales
+3. **Enhanced `/oden:prd`** - Sistema de preguntas profundas para PRDs más completos
+4. **Extended `/oden:init`** - Wizard de configuración avanzado con settings de equipo
+5. **Agentes Especializados** - Pipeline de 5 agentes (Security, Performance, Accessibility, SEO, Quality)
+6. **Dashboard en Tiempo Real** - UI React con monitoreo de agentes y WebSocket
+7. **Sistema de Exportación** - PDF profesional con plantillas y branding personalizado
+8. **Base de Datos de Patrones** - SQLite local con patrones de error y soluciones
+
+### 🎯 Propósito del Fork
+
+- **Experimentación**: Probar nuevas ideas sin afectar el repositorio principal
+- **Validación**: Obtener feedback de la comunidad sobre las mejoras
+- **Contribución**: Desarrollar funcionalidades que puedan ser útiles al proyecto original
+- **Aprendizaje**: Explorar extensiones del framework Documentation-First
 
 > "Documenta y diseña COMPLETAMENTE antes de codificar"
 
@@ -214,11 +247,34 @@ debug> add "verify MCP connections"
 
 ## 🤝 Contribuir
 
+### Al Proyecto Original (Recomendado)
 ```bash
-git clone https://github.com/javikin/oden-forge.git
-cd oden-forge
+git clone https://github.com/javikin/oden.git
+cd oden
 npm install
 ```
+
+### A Este Fork Experimental
+```bash
+git clone https://github.com/israads/oden.git
+cd oden
+npm install
+```
+
+### 🔄 Proceso de Contribución Back al Original
+
+Las mejoras exitosas de este fork serán propuestas al repositorio original siguiendo este proceso:
+
+1. **Validación comunitaria** de las nuevas funcionalidades
+2. **Documentación completa** y pruebas exhaustivas
+3. **Pull Request** al repositorio original con justificación
+4. **Colaboración** con [@javikin](https://github.com/javikin) para integración
+
+## 🙏 Reconocimientos
+
+- **[@javikin](https://github.com/javikin)** - Creador original de Oden Forge y la metodología Documentation-First
+- **Comunidad Claude Code** - Por el feedback y soporte continuo
+- **Contributors** - Todos los que han contribuido al proyecto original
 
 ## 📄 Licencia
 
