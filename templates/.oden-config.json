@@ -1,0 +1,60 @@
+{
+  "project": {
+    "name": "project-name",
+    "type": "web-app",
+    "description": "Project description",
+    "created": "2024-01-01T00:00:00Z",
+    "team": null
+  },
+  "features": {
+    "bug_diagnosis": {
+      "enabled": true,
+      "auto_fix": false,
+      "backup_before_fix": true,
+      "rollback_on_failure": true,
+      "notification_level": "all"
+    },
+    "brainstorming": {
+      "enabled": true,
+      "question_depth": "enhanced",
+      "session_timeout": 1800,
+      "auto_export_notes": true
+    },
+    "pipeline": {
+      "enabled": false,
+      "stages": ["pre-commit", "pre-PR"],
+      "agents": ["security", "performance"],
+      "timeout_minutes": 10,
+      "fail_fast": false
+    },
+    "dashboard": {
+      "enabled": false,
+      "auto_start": true,
+      "port": 3333,
+      "host": "localhost",
+      "metrics_retention_days": 30,
+      "show_notifications": true
+    },
+    "export": {
+      "enabled": false,
+      "default_format": "pdf",
+      "branding": {
+        "enabled": false,
+        "company": "",
+        "logo_path": ""
+      },
+      "auto_export": false
+    }
+  },
+  "team": {
+    "enabled": false,
+    "name": "",
+    "shared_config": false,
+    "conflict_resolution": "prompt",
+    "shared_features": [],
+    "member_roles": false,
+    "created_by": "",
+    "created_at": ""
+  },
+  "version": "1.0.0"
+}

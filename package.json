@@ -34,6 +34,8 @@
   "files": [
     "bin/",
     ".claude/",
+    "lib/",
+    "web/",
     "install.sh",
     "README.md",
     "MIGRATION.md"
@@ -49,9 +51,20 @@
   "dependencies": {
     "chalk": "^4.1.2",
     "commander": "^9.4.1",
-    "inquirer": "^8.2.5",
+    "express": "^4.19.2",
     "fs-extra": "^11.1.1",
-    "semver": "^7.5.4"
+    "inquirer": "^8.2.5",
+    "js-yaml": "^4.1.1",
+    "markdown-it": "^14.1.1",
+    "markdown-it-anchor": "^9.2.0",
+    "markdown-it-container": "^4.0.0",
+    "markdown-it-footnote": "^4.0.0",
+    "markdown-it-table-of-contents": "^1.1.0",
+    "markdown-it-task-lists": "^2.1.1",
+    "prismjs": "^1.30.0",
+    "puppeteer": "^24.37.4",
+    "semver": "^7.5.4",
+    "ws": "^8.17.1"
   },
   "devDependencies": {
     "gh-pages": "^6.1.0"
@@ -66,8 +79,10 @@
       "oden:epic",
       "oden:tasks",
       "oden:work",
+      "oden:dashboard",
       "oden:sync",
       "oden:mcp",
+      "oden:export",
       "oden:help"
     ],
     "version-check": true,
