@@ -1,0 +1,350 @@
+{
+  "epic_name": "oden-team-coordination",
+  "epic_file": ".claude/epics/oden-team-coordination/epic.md",
+  "total_tasks": 9,
+  "github_integration": {
+    "sync_status": "pending",
+    "last_sync": null,
+    "next_sync_scheduled": null,
+    "auto_sync_enabled": true
+  },
+
+  "tasks": [
+    {
+      "task_id": "001",
+      "file": "001-team-configuration-system.md",
+      "github_issue": null,
+      "title": "Team Configuration System - Core Infrastructure",
+      "description": "Create team infrastructure enabling multi-repository coordination, expertise tracking, and capacity planning",
+      "labels": [
+        "epic:oden-team-coordination",
+        "foundation",
+        "backend",
+        "critical",
+        "team-config"
+      ],
+      "assignee": null,
+      "agent_type": "backend-architect",
+      "milestone": "Foundation Layer",
+      "estimated_hours": "4-8h",
+      "priority": "critical",
+      "blocks": ["002", "004", "006", "008"]
+    },
+    {
+      "task_id": "002",
+      "file": "002-enhanced-architect-install.md",
+      "github_issue": null,
+      "title": "Enhanced /oden:architect install - Intelligent Architecture Setup",
+      "description": "Implement intelligent architecture setup with MCP recommendations and cost optimization",
+      "labels": [
+        "epic:oden-team-coordination",
+        "foundation",
+        "backend",
+        "high-priority",
+        "immediate-value",
+        "cost-optimization"
+      ],
+      "assignee": null,
+      "agent_type": "backend-architect",
+      "milestone": "Foundation Layer",
+      "estimated_hours": "1-2d",
+      "priority": "high",
+      "immediate_value": true
+    },
+    {
+      "task_id": "003",
+      "file": "003-dual-command-structure.md",
+      "github_issue": null,
+      "title": "Dual Command Structure - Solo/Team Mode CLI",
+      "description": "Implement seamless command routing between solo and team modes with 100% backward compatibility",
+      "labels": [
+        "epic:oden-team-coordination",
+        "foundation",
+        "cli",
+        "critical",
+        "backward-compatibility"
+      ],
+      "assignee": null,
+      "agent_type": "backend-architect",
+      "milestone": "Foundation Layer",
+      "estimated_hours": "4-8h",
+      "priority": "critical",
+      "blocks": ["009"]
+    },
+    {
+      "task_id": "004",
+      "file": "004-codeowners-analysis-engine.md",
+      "github_issue": null,
+      "title": "CODEOWNERS Analysis Engine - Team Expertise Intelligence",
+      "description": "Build CODEOWNERS analysis engine with commit history integration for team expertise profiles",
+      "labels": [
+        "epic:oden-team-coordination",
+        "intelligence",
+        "fullstack",
+        "high-priority",
+        "ai-foundation"
+      ],
+      "assignee": null,
+      "agent_type": "fullstack-developer",
+      "milestone": "Intelligence Layer",
+      "estimated_hours": "1-2d",
+      "priority": "high",
+      "depends_on": ["001"],
+      "blocks": ["005"]
+    },
+    {
+      "task_id": "005",
+      "file": "005-ai-assignment-logic.md",
+      "github_issue": null,
+      "title": "AI Assignment Logic - Intelligent Task Distribution",
+      "description": "Implement AI-driven task assignment achieving >80% accuracy with expertise and capacity optimization",
+      "labels": [
+        "epic:oden-team-coordination",
+        "intelligence",
+        "ai",
+        "fullstack",
+        "high-priority",
+        "competitive-differentiator"
+      ],
+      "assignee": null,
+      "agent_type": "fullstack-developer",
+      "milestone": "Intelligence Layer",
+      "estimated_hours": "1-2d",
+      "priority": "high",
+      "depends_on": ["004"],
+      "sequential": true
+    },
+    {
+      "task_id": "006",
+      "file": "006-multi-repo-epic-creation.md",
+      "github_issue": null,
+      "title": "Multi-Repository Epic Creation - Cross-Repo Coordination",
+      "description": "Implement multi-repository epic orchestration with GitHub integration and dependency management",
+      "labels": [
+        "epic:oden-team-coordination",
+        "orchestration",
+        "backend",
+        "multi-repo",
+        "high-priority",
+        "github-integration"
+      ],
+      "assignee": null,
+      "agent_type": "backend-architect",
+      "milestone": "Orchestration Layer",
+      "estimated_hours": "2-3d",
+      "priority": "high",
+      "depends_on": ["001"],
+      "blocks": ["007"],
+      "coordination_required": ["008"]
+    },
+    {
+      "task_id": "007",
+      "file": "007-cross-repository-task-distribution.md",
+      "github_issue": null,
+      "title": "Cross-Repository Task Distribution - Distributed Coordination",
+      "description": "Implement cross-repository task distribution with real-time progress synchronization",
+      "labels": [
+        "epic:oden-team-coordination",
+        "orchestration",
+        "backend",
+        "multi-repo",
+        "high-priority",
+        "coordination"
+      ],
+      "assignee": null,
+      "agent_type": "backend-architect",
+      "milestone": "Orchestration Layer",
+      "estimated_hours": "1-2d",
+      "priority": "high",
+      "depends_on": ["006"],
+      "sequential": true
+    },
+    {
+      "task_id": "008",
+      "file": "008-github-app-integration.md",
+      "github_issue": null,
+      "title": "GitHub App Integration - Native Multi-Repo Integration",
+      "description": "Implement native GitHub App with multi-repository permissions and webhook-driven updates",
+      "labels": [
+        "epic:oden-team-coordination",
+        "interface",
+        "github-app",
+        "fullstack",
+        "medium-priority",
+        "native-integration"
+      ],
+      "assignee": null,
+      "agent_type": "fullstack-developer",
+      "milestone": "Interface Layer",
+      "estimated_hours": "2-3d",
+      "priority": "medium",
+      "depends_on": ["001"],
+      "coordination_required": ["006"]
+    },
+    {
+      "task_id": "009",
+      "file": "009-team-cli-enhancements.md",
+      "github_issue": null,
+      "title": "Team CLI Enhancements - Team Coordination Interface",
+      "description": "Implement team-aware CLI with progress visualization, capacity monitoring, and coordination status",
+      "labels": [
+        "epic:oden-team-coordination",
+        "interface",
+        "cli",
+        "fullstack",
+        "medium-priority",
+        "user-experience"
+      ],
+      "assignee": null,
+      "agent_type": "fullstack-developer",
+      "milestone": "Interface Layer",
+      "estimated_hours": "4-8h",
+      "priority": "medium",
+      "depends_on": ["003"]
+    }
+  ],
+
+  "milestones": {
+    "foundation_layer": {
+      "name": "Foundation Layer",
+      "description": "Core team coordination infrastructure",
+      "tasks": ["001", "002", "003"],
+      "target_completion": "Week 1",
+      "success_criteria": [
+        "Team configuration system operational",
+        "Enhanced architect provides immediate value",
+        "Command structure maintains backward compatibility"
+      ]
+    },
+    "intelligence_layer": {
+      "name": "Intelligence Layer",
+      "description": "AI-driven team coordination intelligence",
+      "tasks": ["004", "005"],
+      "target_completion": "Week 2",
+      "success_criteria": [
+        "CODEOWNERS analysis >80% accuracy",
+        "AI assignment accuracy >80%"
+      ]
+    },
+    "orchestration_layer": {
+      "name": "Orchestration Layer",
+      "description": "Multi-repository coordination and management",
+      "tasks": ["006", "007"],
+      "target_completion": "Week 3",
+      "success_criteria": [
+        "Multi-repo epic creation functional",
+        "Cross-repo task distribution operational"
+      ]
+    },
+    "interface_layer": {
+      "name": "Interface Layer",
+      "description": "User interfaces and GitHub integration",
+      "tasks": ["008", "009"],
+      "target_completion": "Week 3-4",
+      "success_criteria": [
+        "GitHub App provides native integration",
+        "CLI delivers comprehensive team coordination"
+      ]
+    }
+  },
+
+  "labels": {
+    "epic:oden-team-coordination": {
+      "color": "0366d6",
+      "description": "Tasks belonging to the team coordination epic"
+    },
+    "foundation": {
+      "color": "d73a49",
+      "description": "Core infrastructure tasks"
+    },
+    "intelligence": {
+      "color": "28a745",
+      "description": "AI and analysis tasks"
+    },
+    "orchestration": {
+      "color": "f66a0a",
+      "description": "Multi-repository coordination tasks"
+    },
+    "interface": {
+      "color": "6f42c1",
+      "description": "User interface and integration tasks"
+    },
+    "critical": {
+      "color": "b60205",
+      "description": "Critical priority tasks"
+    },
+    "high-priority": {
+      "color": "d93f0b",
+      "description": "High priority tasks"
+    },
+    "immediate-value": {
+      "color": "0e8a16",
+      "description": "Tasks providing immediate value"
+    },
+    "competitive-differentiator": {
+      "color": "5319e7",
+      "description": "Tasks that differentiate from competitors"
+    }
+  },
+
+  "sync_configuration": {
+    "auto_create_issues": true,
+    "auto_update_progress": true,
+    "sync_frequency": "real-time",
+    "conflict_resolution": "github_wins",
+    "notification_channels": ["github", "cli"],
+    "progress_tracking": {
+      "update_on_commit": true,
+      "update_on_pr_merge": true,
+      "aggregate_cross_repo": true
+    }
+  },
+
+  "github_repository_mapping": {
+    "primary_repository": "current",
+    "related_repositories": [],
+    "cross_repo_coordination": false,
+    "epic_issue_creation": "primary_repository_only",
+    "task_distribution_strategy": "single_repository"
+  },
+
+  "integration_hooks": {
+    "pre_sync": [
+      "validate_task_files",
+      "check_github_connectivity",
+      "verify_repository_permissions"
+    ],
+    "post_sync": [
+      "update_progress_tracking",
+      "generate_sync_report",
+      "notify_team_members"
+    ],
+    "sync_failure": [
+      "rollback_partial_changes",
+      "log_error_details",
+      "notify_administrators"
+    ]
+  },
+
+  "reporting": {
+    "sync_history": [],
+    "success_metrics": {
+      "total_tasks_synced": 0,
+      "successful_syncs": 0,
+      "failed_syncs": 0,
+      "sync_success_rate": "0%"
+    },
+    "performance_metrics": {
+      "average_sync_time": null,
+      "last_sync_duration": null,
+      "largest_sync_size": null
+    }
+  },
+
+  "next_actions": [
+    "Review all task files for completeness",
+    "Run /oden:sync oden-team-coordination to push to GitHub",
+    "Assign team members to appropriate tasks based on agent_type",
+    "Begin implementation starting with Foundation Layer tasks"
+  ]
+}

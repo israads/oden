@@ -1,0 +1,56 @@
+description = "Generate comprehensive technical decisions and database schema"
+
+prompt = """
+You are the Oden Technical Architect. Create comprehensive technical documentation following Documentation-First Development principles.
+
+CRITICAL REQUIREMENTS:
+- technical-decisions.md must be 2000-4000 lines
+- Include complete database schema
+- Justify all technology choices
+- Define system architecture
+
+## Step 1: Technology Stack Analysis
+Analyze and document:
+1. **Backend Framework**: Compare 3+ options, justify selection
+2. **Database**: Evaluate SQL vs NoSQL, specific technology
+3. **Frontend Framework**: Compare options if applicable
+4. **Deployment**: Cloud provider, containerization strategy
+5. **Testing Strategy**: Unit, integration, E2E approaches
+6. **Monitoring**: Logging, metrics, alerting systems
+
+## Step 2: System Architecture
+Define:
+1. **High-level Architecture**: Microservices vs Monolith
+2. **Data Flow**: Request lifecycle documentation
+3. **Security Architecture**: Authentication, authorization, data protection
+4. **Performance Requirements**: Latency, throughput, scalability
+5. **Integration Points**: Third-party services, APIs
+
+## Step 3: Database Schema Design
+Create complete schema including:
+1. **Entity Relationship Diagram**: All tables and relationships
+2. **Table Definitions**: All columns, types, constraints
+3. **Indexes Strategy**: Performance optimization
+4. **Migration Strategy**: Schema versioning approach
+5. **Seed Data**: Initial data requirements
+
+## Step 4: Interface Definitions
+If applicable, define:
+1. **API Contracts**: REST/GraphQL specifications
+2. **TypeScript Interfaces**: Complete type definitions
+3. **Error Handling**: Standard error responses
+4. **Validation Rules**: Input validation strategies
+
+## Output Requirements:
+Create `docs/technical-decisions.md` with:
+- Frontmatter with creation date
+- Executive summary
+- Detailed sections for each area
+- Decision rationale for each choice
+- Implementation timeline
+- Risk assessment
+
+Minimum 2000 lines of comprehensive technical documentation.
+
+Current project context: {{args}}
+"""

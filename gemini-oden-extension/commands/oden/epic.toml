@@ -1,0 +1,71 @@
+description = "Convert PRD to technical Epic with work streams and task breakdown"
+
+prompt = """
+You are the Oden Epic Architect. Convert a PRD into a detailed technical Epic with parallel work streams.
+
+## Step 1: PRD Analysis
+First, read the PRD file `docs/development/current/{{args}}-prd.md`.
+
+If the file doesn't exist, inform the user to run `/oden:prd {{args}}` first.
+
+## Step 2: Technical Decomposition
+Analyze the PRD and break it down into technical work streams:
+
+### Typical Work Streams:
+1. **Database Layer**: Schema changes, migrations, data access
+2. **API Layer**: Endpoints, business logic, validation
+3. **Frontend Layer**: Components, pages, user interactions
+4. **Testing Layer**: Unit tests, integration tests, E2E tests
+5. **Documentation**: API docs, user guides, technical specs
+6. **DevOps**: Deployment, monitoring, infrastructure
+
+## Step 3: Create Epic File
+Generate `docs/development/current/{{args}}-epic.md`:
+
+```yaml
+---
+name: {{args}}
+type: epic
+status: backlog
+prd_source: {{args}}-prd.md
+created: [CURRENT_ISO_DATETIME]
+updated: [CURRENT_ISO_DATETIME]
+estimated_points: [CALCULATE_TOTAL]
+work_streams: [LIST_STREAMS]
+---
+```
+
+Include:
+1. **Epic Overview** (Summary from PRD)
+2. **Technical Approach** (High-level implementation strategy)
+3. **Work Stream Breakdown** (Parallel work streams)
+4. **Dependencies** (What blocks what)
+5. **Acceptance Criteria** (Done definition)
+6. **Risk Mitigation** (Technical risks and solutions)
+
+## Step 4: Work Stream Details
+For each work stream, document:
+- **Stream Name**: Clear identifier
+- **Description**: What needs to be built
+- **Files Affected**: Expected code changes
+- **Estimated Effort**: Story points or hours
+- **Dependencies**: Other streams or external factors
+- **Acceptance Criteria**: Definition of done
+
+## Step 5: Task Planning Template
+Prepare structure for task breakdown:
+```
+Tasks will be created via /oden:tasks {{args}} command:
+- Stream 1: [X] tasks estimated
+- Stream 2: [Y] tasks estimated
+- Total: [Z] GitHub issues to be created
+```
+
+## Step 6: Next Steps
+Guide user to:
+1. Review and adjust work streams
+2. Run `/oden:tasks {{args}}` to create individual tasks
+3. Then `/oden:sync {{args}}` to push to GitHub
+
+Epic name: {{args}}
+"""

@@ -1,0 +1,251 @@
+{
+  "epic": "oden-team-coordination",
+  "total_tasks": 9,
+  "critical_path_days": 8,
+  "parallel_streams": 4,
+  "estimated_effort": "12-18 days",
+
+  "execution_groups": {
+    "group_a": {
+      "name": "Foundation (Start Immediately)",
+      "tasks": ["001", "002", "003"],
+      "parallel_execution": true,
+      "estimated_duration": "2-3 days",
+      "priority": "critical"
+    },
+    "group_b": {
+      "name": "Parallel Development (After Foundation)",
+      "tasks": ["004", "006", "008"],
+      "parallel_execution": true,
+      "estimated_duration": "2-3 days",
+      "priority": "high",
+      "depends_on": ["001"]
+    },
+    "group_c": {
+      "name": "Sequential Dependencies",
+      "tasks": ["005", "007"],
+      "parallel_execution": false,
+      "estimated_duration": "2-4 days",
+      "priority": "high"
+    },
+    "group_d": {
+      "name": "Final Integration",
+      "tasks": ["009"],
+      "parallel_execution": false,
+      "estimated_duration": "0.5-1 day",
+      "priority": "medium"
+    }
+  },
+
+  "dependencies": {
+    "001": {
+      "name": "Team Configuration System",
+      "depends_on": [],
+      "blocks": ["004", "006", "008"],
+      "parallel_with": ["002", "003"],
+      "agent_type": "backend-architect",
+      "critical_path": true,
+      "foundation_enabler": true
+    },
+    "002": {
+      "name": "Enhanced /oden:architect install",
+      "depends_on": [],
+      "blocks": [],
+      "parallel_with": ["001", "003"],
+      "agent_type": "backend-architect",
+      "immediate_value": true,
+      "high_priority": true
+    },
+    "003": {
+      "name": "Dual Command Structure",
+      "depends_on": [],
+      "blocks": ["009"],
+      "parallel_with": ["001", "002"],
+      "agent_type": "backend-architect",
+      "cli_foundation": true
+    },
+    "004": {
+      "name": "CODEOWNERS Analysis Engine",
+      "depends_on": ["001"],
+      "blocks": ["005"],
+      "parallel_with": ["006", "008"],
+      "agent_type": "fullstack-developer",
+      "intelligence_foundation": true
+    },
+    "005": {
+      "name": "AI Assignment Logic",
+      "depends_on": ["004"],
+      "blocks": [],
+      "parallel_with": [],
+      "agent_type": "fullstack-developer",
+      "competitive_differentiator": true,
+      "sequential_after": "004"
+    },
+    "006": {
+      "name": "Multi-Repo Epic Creation",
+      "depends_on": ["001"],
+      "blocks": ["007"],
+      "parallel_with": ["004", "008"],
+      "coordination_required": ["008"],
+      "agent_type": "backend-architect",
+      "critical_path": true
+    },
+    "007": {
+      "name": "Cross-Repository Task Distribution",
+      "depends_on": ["006"],
+      "blocks": [],
+      "parallel_with": [],
+      "agent_type": "backend-architect",
+      "sequential_after": "006"
+    },
+    "008": {
+      "name": "GitHub App Integration",
+      "depends_on": ["001"],
+      "blocks": [],
+      "parallel_with": ["004", "006"],
+      "coordination_required": ["006"],
+      "agent_type": "fullstack-developer",
+      "shared_interfaces": ["lib/github/"]
+    },
+    "009": {
+      "name": "Team CLI Enhancements",
+      "depends_on": ["003"],
+      "blocks": [],
+      "parallel_with": [],
+      "agent_type": "fullstack-developer",
+      "user_experience_layer": true
+    }
+  },
+
+  "critical_paths": [
+    {
+      "name": "Primary Critical Path",
+      "tasks": ["001", "006", "007"],
+      "total_duration": "6-8 days",
+      "description": "Team config → Multi-repo epic → Task distribution"
+    },
+    {
+      "name": "Intelligence Path",
+      "tasks": ["001", "004", "005"],
+      "total_duration": "5-7 days",
+      "description": "Team config → CODEOWNERS analysis → AI assignment"
+    }
+  ],
+
+  "coordination_requirements": {
+    "task_006_008": {
+      "description": "Both tasks modify lib/github/ - coordinate shared interfaces",
+      "shared_files": ["lib/github/rate-limiter.ts", "lib/github/client-interface.ts"],
+      "coordination_schedule": "Daily interface alignment meetings",
+      "resolution": "Create shared interface contracts, separate implementation files"
+    }
+  },
+
+  "file_conflict_analysis": {
+    "no_conflicts": [
+      "Tasks 001, 002, 003 - completely separate file areas",
+      "Tasks 004, 005 - sequential dependency, clean handoff",
+      "Tasks 006, 007 - sequential dependency, clean handoff",
+      "Task 009 - separate CLI area, depends only on task 003"
+    ],
+    "coordination_required": [
+      "Tasks 006 + 008: Both use lib/github/ - need interface coordination"
+    ],
+    "safe_parallel_execution": [
+      "Group A: Tasks 001, 002, 003 can run completely in parallel",
+      "Group B: Tasks 004, 006, 008 can run in parallel with coordination",
+      "Group C: Tasks 005, 007 must run sequentially after their dependencies",
+      "Group D: Task 009 runs after CLI foundation established"
+    ]
+  },
+
+  "team_optimization": {
+    "optimal_team_size": "2-3 developers",
+    "specialization_requirements": {
+      "backend_architect": {
+        "tasks": ["001", "002", "003", "006", "007"],
+        "workload": "10-14 days",
+        "expertise": "System architecture, multi-repo coordination, GitHub integration"
+      },
+      "fullstack_developer": {
+        "tasks": ["004", "005", "008", "009"],
+        "workload": "8-12 days",
+        "expertise": "AI algorithms, data analysis, CLI development, GitHub APIs"
+      }
+    },
+    "workload_distribution": {
+      "week_1": {
+        "backend_architect": ["001", "002", "003"],
+        "fullstack_developer": ["Research and preparation for tasks 004, 008"]
+      },
+      "week_2": {
+        "backend_architect": ["006"],
+        "fullstack_developer": ["004", "008"]
+      },
+      "week_3": {
+        "backend_architect": ["007"],
+        "fullstack_developer": ["005", "009"]
+      }
+    }
+  },
+
+  "risk_mitigation": {
+    "high_risk_tasks": {
+      "005": {
+        "risk": "AI assignment complexity may exceed estimates",
+        "mitigation": "Start with rule-based system, manual override always available"
+      },
+      "006": {
+        "risk": "Multi-repo coordination complexity",
+        "mitigation": "Incremental scaling (2 repos → N repos), rollback capabilities"
+      }
+    },
+    "coordination_risks": {
+      "github_api_limits": {
+        "affected_tasks": ["006", "007", "008"],
+        "mitigation": "Intelligent rate limiting, batch operations, webhook alternatives"
+      },
+      "team_adoption": {
+        "affected_tasks": ["All"],
+        "mitigation": "100% backward compatibility, gradual feature introduction"
+      }
+    }
+  },
+
+  "success_metrics": {
+    "foundation_completion": {
+      "milestone": "End of Week 1",
+      "tasks": ["001", "002", "003"],
+      "success_criteria": [
+        "Team configuration operational",
+        "Enhanced architect install provides immediate value",
+        "Dual commands maintain 100% backward compatibility"
+      ]
+    },
+    "intelligence_completion": {
+      "milestone": "End of Week 2",
+      "tasks": ["004", "005"],
+      "success_criteria": [
+        "CODEOWNERS analysis achieves >80% accuracy",
+        "AI assignment accuracy >80%"
+      ]
+    },
+    "coordination_completion": {
+      "milestone": "End of Week 3",
+      "tasks": ["006", "007", "008"],
+      "success_criteria": [
+        "Multi-repo epic creation functional",
+        "GitHub App integration operational",
+        "Cross-repo task distribution working"
+      ]
+    },
+    "integration_completion": {
+      "milestone": "End of Week 3-4",
+      "tasks": ["009"],
+      "success_criteria": [
+        "Team CLI provides comprehensive coordination view",
+        "End-to-end team workflow operational"
+      ]
+    }
+  }
+}

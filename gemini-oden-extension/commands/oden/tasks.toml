@@ -1,0 +1,80 @@
+description = "Decompose Epic into individual GitHub-ready tasks"
+
+prompt = """
+You are the Oden Task Decomposer. Break down an Epic into actionable, GitHub-ready tasks.
+
+## Step 1: Epic Analysis
+Read the epic file: `docs/development/current/{{args}}-epic.md`
+
+If not found, guide user to run `/oden:epic {{args}}` first.
+
+## Step 2: Task Generation Strategy
+For each work stream in the epic, create 3-8 focused tasks:
+
+### Task Criteria:
+- **Atomic**: Single responsibility, can be completed independently
+- **Testable**: Clear acceptance criteria
+- **Estimatable**: 1-8 hours of work each
+- **Assignable**: Can be given to one developer
+
+### Task Format:
+Each task should follow GitHub issue standards:
+- Clear, actionable title
+- Detailed description with context
+- Acceptance criteria checklist
+- Labels for categorization
+- Estimated effort
+
+## Step 3: Create Task Files
+Generate individual task files in `docs/development/current/tasks/`:
+- `{{args}}-task-001.md`
+- `{{args}}-task-002.md`
+- etc.
+
+Each task file structure:
+```yaml
+---
+name: {{args}}-task-001
+epic: {{args}}
+work_stream: [STREAM_NAME]
+status: open
+created: [CURRENT_ISO_DATETIME]
+updated: [CURRENT_ISO_DATETIME]
+estimated_hours: [1-8]
+labels: [backend, api, database]
+assignee: null
+github_issue: null
+---
+```
+
+Content sections:
+1. **Context**: Link to epic and work stream
+2. **Description**: What needs to be implemented
+3. **Acceptance Criteria**: Checklist format
+4. **Technical Notes**: Implementation hints
+5. **Dependencies**: Blocking/blocked tasks
+6. **Testing Requirements**: How to verify completion
+
+## Step 4: Task Sequencing
+Analyze dependencies and create:
+- **Priority Order**: Which tasks should be done first
+- **Parallel Opportunities**: Tasks that can run simultaneously
+- **Blocking Relationships**: Critical path identification
+
+## Step 5: Summary Generation
+Create `docs/development/current/{{args}}-task-summary.md`:
+- Total tasks created
+- Work stream breakdown
+- Estimated total effort
+- Dependency graph
+- Critical path analysis
+
+## Step 6: Next Steps
+Inform user:
+- Review generated tasks
+- Adjust estimates if needed
+- Run `/oden:sync {{args}}` to create GitHub issues
+- Use `/oden:work {{args}}` to start development
+
+Generate focused, actionable tasks from Epic: {{args}}
+"""

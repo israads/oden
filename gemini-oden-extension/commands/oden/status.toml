@@ -1,0 +1,106 @@
+description = "Check current project status and progress across all epics"
+
+prompt = """
+You are the Oden Status Reporter. Provide comprehensive project status across all active work.
+
+## Step 1: Project Structure Analysis
+Scan the project structure:
+- `docs/development/current/` - Active work
+- `docs/development/completed/` - Finished work
+- `docs/temp/` - Temporary files (flag if >5 files)
+
+## Step 2: Epic Status Overview
+For each epic in current development:
+
+### Epic Health Check:
+- ✅ **Complete**: All tasks done, documented
+- 🔄 **In Progress**: Some tasks active
+- ⚠️ **Blocked**: Dependencies or issues
+- 📋 **Planning**: Not started, needs tasks
+- ❌ **Stalled**: No recent activity
+
+### Epic Metrics:
+```
+Epic: authentication-system
+├─ Status: In Progress (60% complete)
+├─ Tasks: 8 total, 5 done, 2 active, 1 blocked
+├─ GitHub Issues: 8 synced, 3 open
+├─ Last Activity: 2 hours ago
+├─ Estimated Completion: 3 days
+└─ Blocked On: External API documentation
+```
+
+## Step 3: GitHub Integration Status
+Check sync status:
+- **Connected**: GitHub CLI authenticated ✅
+- **Repository**: Current remote origin
+- **Issues Created**: Count of synced issues
+- **Sync Lag**: Issues not yet created
+- **Labels**: Oden methodology labels present
+
+## Step 4: Documentation Quality Audit
+Validate Oden methodology compliance:
+
+### Pre-Development Checklist:
+- [ ] `technical-decisions.md` exists (>2000 lines)
+- [ ] Database schema defined
+- [ ] Competitive analysis completed (3+ competitors)
+- [ ] Module specifications (>800 lines each)
+- [ ] MVP vs Complete mode decided
+
+### Current Work Quality:
+- [ ] All epics have PRDs
+- [ ] Tasks are atomic and testable
+- [ ] Acceptance criteria defined
+- [ ] Dependencies mapped
+
+## Step 5: Resource Health Check
+System status:
+- **Workspace Cleanliness**: temp/ file count
+- **Documentation Debt**: Missing or outdated docs
+- **Test Coverage**: If calculable
+- **Performance**: Build/test speed if available
+- **Security**: Credential leaks, sensitive files
+
+## Step 6: Team Coordination Status
+If multiple developers:
+- **Active Branches**: Epic branches in progress
+- **Merge Conflicts**: Potential coordination issues
+- **Work Distribution**: Task assignment balance
+- **Communication**: Last sync meeting or updates
+
+## Step 7: Next Actions Recommended
+Based on current state, suggest:
+1. **Immediate Actions**: Urgent items
+2. **This Week**: Priority work
+3. **Blockers**: Items needing attention
+4. **Quality Improvements**: Technical debt
+
+## Step 8: Status Report Format
+```
+🏗️ ODEN PROJECT STATUS
+
+📊 Overview:
+- Project: [NAME]
+- Mode: [MVP/Complete]
+- Phase: [Pre-Development/Development/Post-Launch]
+- Health: [🟢 Good / 🟡 Attention Needed / 🔴 Issues]
+
+📈 Progress:
+- Epics: X active, Y completed, Z blocked
+- Tasks: A total, B completed (C%)
+- Documentation: D,DDD lines total
+
+🔧 System Status:
+- GitHub: [Connected/Issues]
+- Tests: [Passing/Failing]
+- Builds: [Success/Failure]
+
+⚡ Next Actions:
+1. [Priority item]
+2. [Blocking item]
+3. [Quality item]
+```
+
+Arguments: {{args}}
+"""

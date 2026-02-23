@@ -1,0 +1,68 @@
+{
+  "framework": "auto-detect",
+  "coverage_threshold": 80,
+  "token_optimization": true,
+  "smart_generation": true,
+  "pre_commit_hooks": true,
+  "test_patterns": {
+    "unit": "**/*.test.js",
+    "integration": "**/*.integration.js",
+    "e2e": "**/*.e2e.js"
+  },
+  "exclude_patterns": [
+    "node_modules/**",
+    "build/**",
+    "dist/**",
+    "*.config.js",
+    "*.min.js",
+    "__tests__/**",
+    "*.test.*",
+    "*.spec.*"
+  ],
+  "quality_gates": {
+    "min_coverage": 80,
+    "max_test_time": 30000,
+    "performance_threshold": 0.8,
+    "complexity_threshold": 10
+  },
+  "generation_settings": {
+    "max_tokens_per_function": 300,
+    "prioritize_critical_functions": true,
+    "generate_edge_cases": true,
+    "include_performance_tests": false,
+    "auto_fix_tests": true
+  },
+  "frameworks": {
+    "jest": {
+      "config_file": "jest.config.js",
+      "setup_files": ["jest.setup.js"],
+      "test_environment": "node"
+    },
+    "vitest": {
+      "config_file": "vitest.config.js",
+      "test_environment": "node"
+    },
+    "mocha": {
+      "config_file": ".mocharc.json",
+      "require": ["@babel/register"]
+    }
+  },
+  "hooks": {
+    "pre_commit": {
+      "run_tests": true,
+      "check_coverage": true,
+      "lint_tests": true,
+      "performance_check": false
+    },
+    "pre_push": {
+      "run_full_suite": true,
+      "e2e_tests": true
+    }
+  },
+  "reporting": {
+    "console_output": "detailed",
+    "generate_html_report": true,
+    "coverage_formats": ["text", "html", "json"],
+    "performance_metrics": true
+  }
+}

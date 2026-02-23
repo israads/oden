@@ -1,0 +1,55 @@
+{
+  "name": "oden-forge",
+  "version": "1.0.0",
+  "description": "Documentation-First Development methodology for Gemini CLI",
+  "author": "Oden Forge Team",
+  "keywords": ["methodology", "documentation", "project-management", "development"],
+  "mcpServers": {
+    "oden-project-manager": {
+      "command": "node",
+      "args": ["${extensionPath}/mcp/project-manager.js"],
+      "cwd": "${extensionPath}",
+      "env": {
+        "ODEN_PROJECT_ROOT": "${workspacePath}",
+        "NODE_ENV": "production"
+      }
+    },
+    "oden-github-sync": {
+      "command": "python3",
+      "args": ["${extensionPath}/mcp/github-sync.py"],
+      "cwd": "${extensionPath}",
+      "env": {
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}",
+        "PROJECT_ROOT": "${workspacePath}"
+      }
+    }
+  },
+  "contextFileName": "GEMINI.md",
+  "settings": [
+    {
+      "name": "GITHUB_TOKEN",
+      "description": "GitHub Personal Access Token for issue sync",
+      "required": false,
+      "secret": true
+    },
+    {
+      "name": "PROJECT_TYPE",
+      "description": "Type of project (web, mobile, api, fullstack)",
+      "required": false,
+      "default": "web",
+      "options": ["web", "mobile", "api", "fullstack", "desktop"]
+    },
+    {
+      "name": "DEVELOPMENT_MODE",
+      "description": "Development approach (mvp, complete)",
+      "required": false,
+      "default": "mvp",
+      "options": ["mvp", "complete"]
+    }
+  ],
+  "excludeTools": [],
+  "dependencies": [
+    "node >= 18.0.0",
+    "python3 >= 3.8.0"
+  ]
+}

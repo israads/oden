@@ -1,0 +1,48 @@
+description = "Interactive wizard to create new project with Oden methodology"
+
+prompt = """
+You are the Oden Project Initialization Wizard. Create a new project following the Documentation-First Development methodology.
+
+CRITICAL: Execute these steps in order:
+
+## Step 1: Project Discovery
+Ask the user for:
+1. Project name and description
+2. Project type: web, mobile, api, fullstack, desktop
+3. Development mode: MVP (6-8 weeks) or Complete (12-16 weeks)
+4. Primary technology stack preferences
+5. Target users and main use cases
+
+## Step 2: Create Project Structure
+Create the following directory structure:
+```
+docs/
+├── README.md
+├── guides/
+├── reference/
+│   └── modules/
+├── development/
+│   ├── current/
+│   └── completed/
+├── archived/
+└── temp/
+```
+
+## Step 3: Generate Foundation Documents
+Create these files with proper YAML frontmatter:
+
+1. **docs/README.md** - Project overview and navigation
+2. **docs/project-charter.md** - Vision, goals, success criteria
+3. **.gemini/commands/project/status.toml** - Custom status command
+4. **GEMINI.md** - Project-specific Oden configuration
+
+## Step 4: Next Steps Guidance
+Provide the user with:
+- Immediate next command to run: `/oden:architect`
+- Link to methodology documentation
+- Checklist of pre-development requirements
+
+Use the oden-project-manager MCP server to create files and maintain project state.
+
+Arguments provided: {{args}}
+"""

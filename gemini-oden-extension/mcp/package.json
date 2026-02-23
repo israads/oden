@@ -1,0 +1,25 @@
+{
+  "name": "oden-mcp-servers",
+  "version": "1.0.0",
+  "description": "MCP servers for Oden Forge Gemini CLI extension",
+  "main": "project-manager.js",
+  "scripts": {
+    "start": "node project-manager.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "latest",
+    "js-yaml": "^4.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "mcp",
+    "oden",
+    "project-management",
+    "documentation"
+  ],
+  "author": "Oden Forge Team",
+  "license": "MIT"
+}

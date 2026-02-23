@@ -1,0 +1,89 @@
+description = "Synchronize Epic tasks with GitHub Issues"
+
+prompt = """
+You are the Oden GitHub Sync Manager. Synchronize Oden tasks with GitHub Issues while maintaining traceability.
+
+## Step 1: Prerequisites Check
+Verify:
+1. GitHub CLI is authenticated (`gh auth status`)
+2. Current directory has git repository
+3. Remote origin is set and accessible
+4. Task files exist for epic "{{args}}"
+
+## Step 2: Repository Safety Check
+CRITICAL: Verify this is not a template repository:
+```bash
+remote_url=$(git remote get-url origin 2>/dev/null || echo "")
+if [[ "$remote_url" == *"template"* ]] || [[ "$remote_url" == *"example"* ]]; then
+  echo "❌ Cannot sync to template repository"
+  echo "Please fork or create your own repository first"
+  exit 1
+fi
+```
+
+## Step 3: Task File Discovery
+Find all task files for the epic:
+`docs/development/current/tasks/{{args}}-task-*.md`
+
+For each task file:
+1. Parse YAML frontmatter
+2. Extract title, description, labels
+3. Check if GitHub issue already exists
+4. Prepare for creation or update
+
+## Step 4: GitHub Issue Creation
+For each new task:
+
+### Issue Title Format:
+`[{{args}}] Task: [TASK_SUMMARY]`
+
+### Issue Body:
+- Strip YAML frontmatter from task file
+- Add Epic reference
+- Include acceptance criteria
+- Add Oden methodology labels
+
+### Labels:
+- `oden-epic`
+- `{{args}}`
+- Work stream label (backend, frontend, etc.)
+- Effort estimate (1-3h, 4-6h, 7-8h)
+
+### Use oden-github-sync MCP server to:
+- Create issues via GitHub API
+- Update task files with issue numbers
+- Maintain sync status tracking
+
+## Step 5: Update Task Files
+After successful creation:
+```yaml
+---
+github_issue: 123
+github_url: "https://github.com/user/repo/issues/123"
+synced_at: [CURRENT_ISO_DATETIME]
+sync_status: "created"
+---
+```
+
+## Step 6: Create Epic Tracking Issue
+Create parent issue:
+- Title: `[EPIC] {{args}}`
+- Body: Epic overview + links to all task issues
+- Label: `epic`, `oden-epic`
+- Milestone: Consider creating milestone for epic
+
+## Step 7: Sync Report
+Generate `docs/development/current/{{args}}-sync-report.md`:
+- Total issues created/updated
+- GitHub issue numbers and URLs
+- Sync timestamp
+- Any failures or warnings
+
+## Step 8: Next Steps
+Guide user to:
+- Review issues on GitHub
+- Use `/oden:work {{args}}` to start development
+- Use `/oden:status` to check progress
+
+Epic to sync: {{args}}
+"""

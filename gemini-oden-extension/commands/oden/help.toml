@@ -1,0 +1,140 @@
+description = "Display comprehensive Oden methodology help and command guide"
+
+prompt = """
+Display the complete Oden Forge help system for Gemini CLI.
+
+# 🔥 Oden Forge for Gemini CLI
+
+**Documentation-First Development Methodology**
+
+> "Document and design COMPLETELY before coding"
+
+## 📋 Quick Start
+
+1. **Initialize Project**: `/oden:init` - Interactive setup wizard
+2. **Technical Architecture**: `/oden:architect` - Generate technical decisions
+3. **Feature Development**: `/oden:prd [name]` → `/oden:epic [name]` → `/oden:tasks [name]`
+4. **GitHub Sync**: `/oden:sync [epic]` - Create GitHub issues
+5. **Development**: `/oden:work [epic]` - Intelligent orchestration
+
+## 🛠️ All Available Commands
+
+### Setup Phase
+| Command | Description | Usage |
+|---------|-------------|-------|
+| `/oden:init` | Project creation wizard | `/oden:init` |
+| `/oden:architect` | Technical decisions & DB schema | `/oden:architect` |
+| `/oden:spec [module]` | Module specifications | `/oden:spec user-auth` |
+
+### Feature Pipeline
+| Command | Description | Usage |
+|---------|-------------|-------|
+| `/oden:prd [name]` | Create PRD with brainstorming | `/oden:prd user-login` |
+| `/oden:epic [name]` | PRD → Technical Epic | `/oden:epic user-login` |
+| `/oden:tasks [epic]` | Epic → Individual tasks | `/oden:tasks user-login` |
+| `/oden:sync [epic]` | Sync to GitHub Issues | `/oden:sync user-login` |
+
+### Development Phase
+| Command | Description | Usage |
+|---------|-------------|-------|
+| `/oden:work [epic]` | Multi-agent orchestrator | `/oden:work user-login` |
+| `/oden:debug [issue]` | Advanced debugging system | `/oden:debug login-error` |
+| `/oden:status` | Project status overview | `/oden:status` |
+| `/oden:daily` | Record daily progress | `/oden:daily` |
+| `/oden:review [scope]` | Code review system | `/oden:review api` |
+
+### Management
+| Command | Description | Usage |
+|---------|-------------|-------|
+| `/oden:progress [epic]` | Show epic progress | `/oden:progress user-login` |
+| `/oden:help` | This help system | `/oden:help` |
+
+## 🏗️ Project Structure
+
+Oden maintains this structure:
+```
+docs/
+├── README.md                 # Project overview
+├── technical-decisions.md    # Architecture (2000+ lines)
+├── competitive-analysis.md   # Market research
+├── implementation-plan.md    # Development timeline
+├── guides/                   # User guides
+├── reference/
+│   └── modules/             # Module specifications
+├── development/
+│   ├── current/             # Active epics and tasks
+│   └── completed/           # Finished work
+└── temp/                    # Temporary files (<5 files)
+```
+
+## 📏 Quality Standards
+
+Before ANY coding:
+- [ ] `technical-decisions.md` > 2000 lines
+- [ ] Complete database schema
+- [ ] 3+ competitor analysis
+- [ ] Module specs > 800 lines each
+- [ ] Week-by-week plan
+- [ ] MVP vs Complete decision
+
+## 🚀 Methodology Phases
+
+### Phase 1: Pre-Development (1-2 weeks)
+1. **Architecture**: `/oden:architect` - Technical foundation
+2. **Specifications**: Module-by-module detailed specs
+3. **Validation**: Ensure documentation completeness
+
+### Phase 2: Feature Pipeline (Ongoing)
+1. **PRD Creation**: `/oden:prd [feature]`
+2. **Epic Breakdown**: `/oden:epic [feature]`
+3. **Task Generation**: `/oden:tasks [feature]`
+4. **GitHub Sync**: `/oden:sync [feature]`
+
+### Phase 3: Implementation (6-16 weeks)
+1. **Orchestrated Development**: `/oden:work [epic]`
+2. **Continuous Debugging**: `/oden:debug` when needed
+3. **Progress Tracking**: Daily status updates
+4. **Quality Gates**: Code review before merge
+
+## 🎯 Success Metrics
+
+- **Documentation**: 8,000+ lines before first code
+- **Speed**: Daily progress logging
+- **Quality**: 100% spec compliance
+- **Performance**: <100ms critical paths
+- **Reliability**: 99.9% uptime target
+
+## 💡 Pro Tips
+
+1. **Always start with `/oden:status`** to see current state
+2. **Use `/oden:work` for complex multi-task development**
+3. **Debug with `/oden:debug`** maintains context across sessions
+4. **Sync early and often** with `/oden:sync`**
+5. **Document everything** - future you will thank you
+
+## 🔧 Advanced Features
+
+- **Multi-Agent Orchestration**: Parallel development streams
+- **Session Cleanup**: Automatic workspace management
+- **Context Preservation**: Maintain state across sessions
+- **GitHub Integration**: Seamless issue tracking
+- **Quality Automation**: Built-in compliance checking
+
+## 📚 Learning Resources
+
+- **Methodology Guide**: See GEMINI.md in your project
+- **Command Examples**: Each command has built-in guidance
+- **Best Practices**: Generated in technical-decisions.md
+- **Troubleshooting**: Use `/oden:debug` for systematic help
+
+## 🆘 Getting Help
+
+- **Command Help**: Each command provides guidance
+- **Status Check**: `/oden:status` shows current state
+- **Debug Mode**: `/oden:debug` for systematic problem solving
+- **Community**: GitHub discussions and issues
+
+---
+
+**Remember**: Oden is about eliminating surprises through comprehensive upfront planning. Trust the process! 🚀
+"""
