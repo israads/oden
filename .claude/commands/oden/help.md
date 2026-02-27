@@ -46,11 +46,13 @@ Topics disponibles:
 ║  ├─ /oden:spec [mod]   Especificación de módulo              ║
 ║  └─ /oden:checklist    Verificar todo listo                  ║
 ║                                                              ║
-║  Feature Pipeline (nativo):                                  ║
-║  ├─ /oden:prd [name]   Crear PRD con brainstorming           ║
-║  ├─ /oden:epic [name]  PRD -> Epic con work streams          ║
-║  ├─ /oden:tasks [name] Epic -> Issues desglosados            ║
-║  └─ /oden:sync [sub]   Sincronizar con GitHub Issues         ║
+║  Feature Pipeline (nativo + validación automática):          ║
+║  ├─ /oden:prd [name]        Crear PRD + validación auto     ║
+║  ├─ /oden:prd-validate      Validar PRD completitud/calidad ║
+║  ├─ /oden:epic [name]       PRD -> Epic + validación técnica║
+║  ├─ /oden:epic-validate     Validar Epic implementabilidad  ║
+║  ├─ /oden:tasks [name]      Epic -> Tasks individuales      ║
+║  └─ /oden:sync [sub]        Sincronizar con GitHub Issues   ║
 ║                                                              ║
 ║  Durante Desarrollo:                                         ║
 ║  ├─ /oden:work [epic]  Orquestador con Teams (auto/config)   ║
@@ -75,10 +77,10 @@ Topics disponibles:
 ║  /oden:spec auth           → Specs por módulo                ║
 ║  /oden:checklist           → Verificar                       ║
 ║                                                              ║
-║  FEATURES (pipeline nativo):                                 ║
-║  /oden:prd auth            → Crear PRD                       ║
-║  /oden:epic auth           → PRD -> Epic tecnico             ║
-║  /oden:tasks auth          → Epic -> Issues                  ║
+║  FEATURES (pipeline + validación automática):                ║
+║  /oden:prd auth            → Crear PRD + auto-validar       ║
+║  /oden:epic auth           → PRD -> Epic + validar técnico  ║
+║  /oden:tasks auth          → Epic -> Tasks individuales     ║
 ║  /oden:sync auth           → Push a GitHub Issues            ║
 ║                                                              ║
 ║  DESARROLLO:                                                 ║
@@ -90,17 +92,18 @@ Topics disponibles:
 ║                                                              ║
 ╠══════════════════════════════════════════════════════════════╣
 ║                                                              ║
-║  FILOSOFÍA                                                   ║
+║  FILOSOFÍA + VALIDACIÓN AUTOMÁTICA                          ║
 ║                                                              ║
 ║  ✅ Documenta TODO antes de codificar                        ║
+║  ✅ Validación automática ≥85% calidad                       ║
 ║  ✅ Analiza 3+ competidores                                  ║
 ║  ✅ Specs de 800+ líneas por módulo                          ║
+║  ✅ PRD/Epic validation antes de desarrollo                  ║
 ║  ✅ Progreso diario documentado                              ║
-║  ✅ Define máquinas de estado                                ║
 ║                                                              ║
+║  ❌ NO proceder si validación <85%                           ║
 ║  ❌ NO empieces sin specs completas                          ║
-║  ❌ NO documentes cambios triviales                          ║
-║  ❌ NO dupliques información                                 ║
+║  ❌ NO saltes quality gates                                  ║
 ║                                                              ║
 ╠══════════════════════════════════════════════════════════════╣
 ║                                                              ║
@@ -109,6 +112,11 @@ Topics disponibles:
 ║  /oden:help workflow    - Flujo detallado                    ║
 ║  /oden:help agents      - Sobre los agentes                  ║
 ║  /oden:help faq         - Preguntas frecuentes               ║
+║                                                              ║
+║  📁 DOCUMENTACIÓN (Compatible otros LLMs):                  ║
+║  docs/README.md         - Overview completo                  ║
+║  docs/guides/           - Metodología y workflow             ║
+║  docs/reference/        - Technical decisions                ║
 ║                                                              ║
 ╚══════════════════════════════════════════════════════════════╝
 ```

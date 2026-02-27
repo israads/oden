@@ -259,31 +259,60 @@ subagents_used: competitive-researcher, context-analyzer, domain-researcher, prd
 3. Begin implementation planning
 ```
 
-## 📊 Quality Checks & Output
+## 📊 Automatic Quality Validation
 
-Before completion, verify:
-- [ ] All research insights properly incorporated
-- [ ] User stories have acceptance criteria based on competitive learnings
-- [ ] Success criteria use industry benchmarks from research
-- [ ] Technical constraints from existing system acknowledged
-- [ ] No research findings ignored or contradicted
-- [ ] Competitive differentiation clearly articulated
+**CRITICAL**: Every PRD gets automatic validation for enterprise readiness.
+
+After PRD creation, **automatically execute validation**:
+
+```bash
+echo ""
+echo "🔍 Running automatic PRD validation for quality assurance..."
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+# Launch automatic validation
+/oden:prd-validate $ARGUMENTS
+```
+
+### Quality Gates (Must Pass Before Epic Creation)
+
+**Validation executes 3 parallel subagents:**
+- ✅ **Completeness Auditor**: Checks all required sections are comprehensive
+- ✅ **Consistency Checker**: Detects contradictions and technical conflicts
+- ✅ **Quality Assessor**: Validates professional standards and testability
+
+**Minimum Standards for PASS:**
+- Completeness ≥80%: All sections present and developed
+- Consistency ≥85%: No critical contradictions
+- Quality ≥80%: Requirements specific and testable
+- **Overall ≥85%**: Ready for technical epic creation
+
+### If Validation Fails
+```bash
+# Score 60-84% (Review Needed)
+echo "⚠️ PRD needs improvement. Running auto-fix..."
+/oden:prd-validate $ARGUMENTS --auto-fix
+
+# Score <60% (Major Gaps)
+echo "❌ PRD requires significant rework"
+echo "Consider: /oden:prd $ARGUMENTS --revise"
+```
 
 ## Success Output
 
 ```
-🎉 PRD created with comprehensive research: .claude/prds/$ARGUMENTS.md
+🎉 PRD Created & Validated: .claude/prds/$ARGUMENTS.md
 
 📊 Research Summary:
   Phase 1: Competitive + Context + Domain research (parallel) ✅
   Phase 2: Smart brainstorming with research context ✅
   Phase 3: Research-informed PRD assembly ✅
 
-🔍 Research Insights Applied:
-  - Competitive analysis: [X] competitors analyzed
-  - Market research: [industry trends, user personas, benchmarks]
-  - Technical context: [integration points, constraints identified]
-  - Smart questions: [Y] targeted questions based on research
+🔍 Automatic Validation Results:
+  Overall Score: [XX]% ([PASS/REVIEW_NEEDED/MAJOR_GAPS])
+  └─ Completeness: [XX]% - [status]
+  └─ Consistency: [XX]% - [status]
+  └─ Quality: [XX]% - [status]
 
 📋 PRD Summary:
   - Problem: [one sentence from brainstorming]
@@ -292,16 +321,21 @@ Before completion, verify:
   - Success metrics: [key benchmarks from market research]
   - Differentiation: [competitive advantage identified]
 
-💡 Context Optimization:
-  - Previous: Single session research + brainstorming (~10,000 tokens)
-  - Current: Parallel research + focused brainstorming (~4,000 tokens total)
-  - Quality: Multiple specialized perspectives + market intelligence
-  - Decisions: Research-backed rather than assumption-based
+💡 Quality Assurance:
+  - Enterprise-ready: [Y/N] (based on validation score)
+  - Implementation-ready: [Y/N] (≥85% overall score)
+  - Auto-fixes applied: [count] improvements
+  - Critical issues: [count] requiring attention
 
-Next Steps:
-  1. Review PRD for stakeholder alignment
-  2. Run: /oden:epic $ARGUMENTS (convert to technical implementation plan)
-  3. Share competitive insights with product team
+🚀 Next Steps:
+  [If PASS ≥85%]: ✅ Ready - Run `/oden:epic $ARGUMENTS`
+  [If REVIEW]: ⚠️ Fix issues first - Run `/oden:prd-validate $ARGUMENTS`
+  [If MAJOR_GAPS]: ❌ Rework needed - Consider `/oden:prd $ARGUMENTS --revise`
+
+📋 Deliverables:
+  - PRD document: .claude/prds/$ARGUMENTS.md
+  - Validation report: .claude/prds/$ARGUMENTS-validation.md
+  - Quality score: [XX]% enterprise readiness
 ```
 
 ## 🔧 Implementation Notes

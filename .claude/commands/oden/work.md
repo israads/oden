@@ -579,11 +579,342 @@ Progress: 2/3 streams active
 
 ---
 
-## Paso 8: Post-Trabajo - Verificacion
+## Paso 8: Task Completion Validation & Updates
 
-Cuando TODOS los streams completan:
+**CRÍTICO**: Después de cada stream/task, validar cumplimiento de objetivos y actualizar información.
 
-### 8.1 Ejecutar Tests E2E
+### 8.1 Individual Task Validation (Después de cada Stream)
+
+Cuando UN STREAM completa, **inmediatamente ejecutar validación**:
+
+```bash
+echo "🔍 Validating task completion against specs..."
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+# Para cada task completada en el stream
+for task_file in .claude/epics/$EPIC_NAME/tasks/*.md; do
+  task_id=$(basename "$task_file" .md)
+
+  # Check if this task was part of completed stream
+  if [[ "$completed_stream_tasks" == *"$task_id"* ]]; then
+    echo "🎯 Validating Task: $task_id"
+
+    # Launch task validation subagent
+  fi
+done
+```
+
+#### Task Completion Validator Subagent
+
+```markdown
+Launch subagent: task-validator
+
+Task: Validate completed task against original specs and objectives
+
+Requirements:
+- Read task file: .claude/epics/$EPIC_NAME/tasks/$TASK_ID.md
+- Read related module spec: docs/reference/modules/$MODULE-spec.md (if exists)
+- Read epic objectives: .claude/epics/$EPIC_NAME/epic.md
+- Analyze code changes made for this task:
+  * Git diff for task-related files
+  * New files created
+  * Modified files and change scope
+  * Tests added/updated
+
+- Validate against acceptance criteria:
+  * Each acceptance criterion met? (Yes/No with evidence)
+  * Business logic implemented correctly?
+  * Error handling included?
+  * Performance targets met?
+  * Integration points working?
+
+- Check code quality:
+  * Follows technical-decisions.md patterns
+  * Proper error handling
+  * Appropriate logging
+  * Security considerations
+  * Performance implications
+
+- Output validation report:
+  * COMPLETE / PARTIALLY_COMPLETE / NEEDS_REWORK
+  * Specific items completed vs missing
+  * Quality assessment
+  * Integration verification
+  * Recommendations for improvement
+
+Context: Ensure each task truly meets business requirements, not just technical implementation
+```
+
+#### Task Update Based on Validation
+
+```bash
+# Based on validation results
+case $VALIDATION_STATUS in
+  "COMPLETE")
+    echo "✅ Task $task_id: VALIDATED - All objectives met"
+
+    # Update task status to completed
+    # Update epic progress
+    # Log completion with metrics
+    ;;
+
+  "PARTIALLY_COMPLETE")
+    echo "⚠️ Task $task_id: PARTIAL - Some objectives missing"
+
+    # Create follow-up tasks for missing items
+    # Update task with remaining work
+    # Adjust epic timeline if needed
+    ;;
+
+  "NEEDS_REWORK")
+    echo "❌ Task $task_id: REWORK NEEDED - Major issues found"
+
+    # Mark task as needing revision
+    # Create rework task with specific requirements
+    # Update stream status
+    ;;
+esac
+```
+
+### 8.2 Progress Information Updates
+
+After each task validation, **automatically update project information**:
+
+#### Update Epic Progress
+
+```bash
+# Calculate new epic progress based on completed tasks
+completed_tasks=$(grep -l "status: completed" .claude/epics/$EPIC_NAME/tasks/*.md | wc -l)
+total_tasks=$(ls .claude/epics/$EPIC_NAME/tasks/*.md | wc -l)
+progress_percentage=$((completed_tasks * 100 / total_tasks))
+
+# Update epic.md frontmatter
+sed -i "s/^progress: .*/progress: ${progress_percentage}%/" .claude/epics/$EPIC_NAME/epic.md
+sed -i "s/^updated: .*/updated: $(date -u +"%Y-%m-%dT%H:%M:%SZ")/" .claude/epics/$EPIC_NAME/epic.md
+```
+
+#### Update Work Session Log
+
+```bash
+# Update work-session.md with task completion details
+cat >> .claude/epics/$EPIC_NAME/work-session.md <<EOF
+
+## Task Completion: $task_id ($(date -u +"%Y-%m-%dT%H:%M:%SZ"))
+- Status: $VALIDATION_STATUS
+- Stream: $stream_name
+- Validation Score: $validation_score
+- Key Achievements:
+  $achievements_list
+- Issues Found: $issues_found
+- Next Actions: $next_actions
+EOF
+```
+
+#### Update GitHub Issues (if synced)
+
+```bash
+# If task is synced with GitHub issue
+if [ -f ".claude/epics/$EPIC_NAME/github-mapping.json" ]; then
+  github_issue=$(jq -r ".[\"$task_id\"]" .claude/epics/$EPIC_NAME/github-mapping.json)
+
+  if [ "$github_issue" != "null" ]; then
+    # Update GitHub issue with completion status
+    case $VALIDATION_STATUS in
+      "COMPLETE")
+        gh issue close $github_issue -c "✅ Task completed and validated against specs. All acceptance criteria met."
+        ;;
+      "PARTIALLY_COMPLETE")
+        gh issue comment $github_issue -b "⚠️ Task partially complete. Validation found missing items: $missing_items"
+        ;;
+      "NEEDS_REWORK")
+        gh issue comment $github_issue -b "❌ Task needs rework. Validation issues: $validation_issues"
+        ;;
+    esac
+  fi
+fi
+```
+
+#### Update Technical Documentation
+
+```bash
+# If task involved technical decisions or architecture changes
+if [[ "$task_changes" == *"technical-decisions"* ]] || [[ "$task_changes" == *"architecture"* ]]; then
+  echo "📚 Task involved technical changes - updating documentation..."
+
+  # Launch documentation updater
+fi
+```
+
+```markdown
+Launch subagent: doc-updater
+
+Task: Update technical documentation based on completed task
+
+Requirements:
+- Read completed task details and code changes
+- Identify what technical documentation needs updates:
+  * technical-decisions.md changes
+  * New patterns or conventions established
+  * Database schema evolution
+  * API contract modifications
+  * Architecture pattern updates
+
+- Update relevant documentation files:
+  * Add new technical decisions made
+  * Update existing decisions if changed
+  * Document new patterns established
+  * Update schema documentation
+  * Record rationale for changes
+
+- Ensure documentation stays current with implementation
+- Maintain documentation quality and consistency
+
+Context: Keep technical docs synchronized with actual implementation changes
+```
+
+### 8.3 Stream Completion Summary
+
+When ALL streams in a work session complete:
+
+```bash
+echo ""
+echo "🏁 ALL STREAMS COMPLETED - Final Validation"
+echo "════════════════════════════════════════════"
+
+# Generate comprehensive completion report
+```
+
+```markdown
+Launch subagent: completion-reporter
+
+Task: Generate comprehensive work session completion report
+
+Requirements:
+- Analyze all completed tasks and their validations
+- Read epic objectives and measure achievement
+- Calculate success metrics:
+  * Tasks completed successfully vs planned
+  * Quality validation scores
+  * Timeline adherence
+  * Scope completion percentage
+
+- Generate business impact summary:
+  * Features delivered and validated
+  * Business value achieved
+  * Technical debt created/resolved
+  * Performance impact
+
+- Create lessons learned:
+  * What went well
+  * What could be improved
+  * Process insights
+  * Technical insights
+
+- Output comprehensive completion report
+
+Context: Provide stakeholder-ready summary of work completed and business value delivered
+```
+
+## Paso 9: Enhanced Post-Completion Testing
+
+### 9.1 Comprehensive Test Execution
+
+**NUEVO**: Después de validar todas las tasks, ejecutar sistema de testing completo:
+
+```bash
+echo ""
+echo "🧪 Running comprehensive test validation..."
+/oden:test run
+
+# Si tests fallan, intentar auto-fix
+if [ $? -ne 0 ]; then
+  echo "⚠️ Tests failed after development - running auto-fix..."
+
+  # Launch enhanced test fixer with context
+fi
+```
+
+```markdown
+Launch subagent: post-development-test-fixer
+
+Task: Fix test failures after development completion with full context
+
+Requirements:
+- Read all test failures and error messages
+- Read all completed task specifications and acceptance criteria
+- Read business logic from module specs
+- Read technical-decisions.md for architecture context
+- Analyze what was actually implemented vs what tests expect
+
+- Fix failures by category:
+  * Business logic mismatches → Align tests with implemented logic (verify against specs)
+  * Integration issues → Fix mocks and integration test setup
+  * Data model changes → Update test data to match new schema
+  * API contract changes → Update API tests to match implemented contracts
+  * UI changes → Update component and E2E tests
+
+- For each fix, verify:
+  * Fix maintains business logic correctness
+  * Tests still validate important behaviors
+  * No regression in test coverage
+  * Performance tests still meaningful
+
+- Re-run tests after each fix batch
+- Continue until all tests pass or manual intervention clearly needed
+
+Context: Tests must validate the actual implemented functionality while maintaining business logic verification
+```
+
+## Paso 10: Post-Work Information Synchronization
+
+### 10.1 Final Information Updates
+
+```bash
+# Update all project artifacts with final state
+echo "📊 Synchronizing final project state..."
+
+# Update epic status if all tasks completed
+if [ $progress_percentage -eq 100 ]; then
+  sed -i "s/^status: .*/status: completed/" .claude/epics/$EPIC_NAME/epic.md
+
+  # Move to completed work
+  mv docs/development/current/$EPIC_NAME docs/development/completed/ 2>/dev/null || true
+fi
+
+# Generate final metrics
+```
+
+```markdown
+Launch subagent: metrics-calculator
+
+Task: Calculate and record final work session metrics
+
+Requirements:
+- Analyze entire work session from start to completion
+- Calculate development metrics:
+  * Total time spent vs estimated
+  * Tasks completed vs planned
+  * Quality validation scores average
+  * Test coverage achieved
+  * Performance benchmarks met
+
+- Calculate business metrics:
+  * Features delivered and validated
+  * Acceptance criteria met percentage
+  * Stakeholder objectives achieved
+  * Technical debt impact (positive/negative)
+
+- Record learning insights:
+  * Estimation accuracy
+  * Process improvements identified
+  * Technical challenges overcome
+  * Team coordination effectiveness
+
+- Update project metrics history
+- Generate stakeholder report
+
+Context: Provide quantitative and qualitative assessment of work session success
+```
 
 ```bash
 # Detectar framework de testing

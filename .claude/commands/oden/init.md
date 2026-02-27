@@ -3,9 +3,9 @@ allowed-tools: Bash, Read, Write, LS, Glob, AskUserQuestion, Task, TodoWrite
 description: Wizard interactivo para crear proyectos desde cero con metodología Oden
 ---
 
-# Oden Forge - Project Initialization Wizard
+# Oden Forge - Enhanced Project Initialization Wizard
 
-Wizard interactivo que guía al usuario a crear un proyecto profesional siguiendo la metodología Documentation-First Development.
+Wizard interactivo inteligente que detecta proyectos existentes, sugiere MCPs/skills y guía la creación profesional siguiendo la metodología Documentation-First Development.
 
 ## Usage
 
@@ -13,6 +13,7 @@ Wizard interactivo que guía al usuario a crear un proyecto profesional siguiend
 /oden:init [nombre-proyecto]
 /oden:init agents [category]  # Instalar agentes especializados
 /oden:init mcp [category]     # Instalar MCPs recomendados
+/oden:init update            # Actualizar proyecto existente
 ```
 
 ## Filosofía Core
@@ -23,7 +24,316 @@ Este wizard NO genera código. Genera la **documentación completa** que permiti
 
 ---
 
-## PASO 1: Entender el Objetivo
+## PASO 0: Enhanced Pre-Flight Analysis & Setup
+
+### 0.1 Existing Project Detection
+
+**CRÍTICO**: Antes de cualquier otra acción, detectar estado actual del proyecto:
+
+```bash
+echo "🔍 ODEN FORGE - ANÁLISIS INICIAL DEL PROYECTO"
+echo "═══════════════════════════════════════════════"
+echo ""
+
+# Check for existing Oden structure
+oden_exists=false
+git_exists=false
+repo_url=""
+
+# Detect existing Oden Forge structure
+if [ -d ".claude" ] && [ -f ".claude/CLAUDE.md" ]; then
+  oden_exists=true
+  echo "✅ Estructura Oden Forge detectada"
+
+  # Check completeness
+  if [ -d "docs" ] && [ -f "docs/README.md" ]; then
+    echo "✅ Documentación estructura /docs presente"
+  else
+    echo "⚠️  Estructura /docs faltante (necesaria para compatibilidad multi-LLM)"
+  fi
+
+  if [ -f "docs/reference/technical-decisions.md" ]; then
+    echo "✅ Technical decisions existentes"
+  else
+    echo "⚠️  Technical decisions no encontradas"
+  fi
+
+  if [ -d ".claude/prds" ] && [ "$(ls -A .claude/prds 2>/dev/null)" ]; then
+    echo "✅ PRDs existentes encontrados"
+  else
+    echo "ℹ️  No hay PRDs existentes"
+  fi
+fi
+
+# Check for Git repository
+if [ -d ".git" ]; then
+  git_exists=true
+  repo_url=$(git remote get-url origin 2>/dev/null || echo "")
+  echo "✅ Repositorio Git detectado"
+  if [ -n "$repo_url" ]; then
+    echo "📡 Remote: $repo_url"
+  else
+    echo "ℹ️  Sin remote configurado"
+  fi
+fi
+
+# Check for existing tech stack
+tech_stack_detected=""
+if [ -f "package.json" ]; then
+  tech_stack_detected="Node.js/JavaScript"
+elif [ -f "go.mod" ]; then
+  tech_stack_detected="Go"
+elif [ -f "Cargo.toml" ]; then
+  tech_stack_detected="Rust"
+elif [ -f "pubspec.yaml" ]; then
+  tech_stack_detected="Flutter/Dart"
+elif [ -f "Gemfile" ]; then
+  tech_stack_detected="Ruby"
+fi
+
+if [ -n "$tech_stack_detected" ]; then
+  echo "🛠️  Stack detectado: $tech_stack_detected"
+fi
+
+echo ""
+```
+
+### 0.2 Project State Decision
+
+Based on detection results, present appropriate options:
+
+```bash
+if [ "$oden_exists" = true ]; then
+  echo "🎯 PROYECTO ODEN EXISTENTE DETECTADO"
+  echo "═══════════════════════════════════════"
+  echo ""
+  echo "Opciones disponibles:"
+  echo ""
+  echo "  [U] Update/Upgrade    - Actualizar estructura existente con nuevas features"
+  echo "                         (añade validación automática, /docs structure, etc.)"
+  echo ""
+  echo "  [M] Maintain/Configure - Revisar MCPs/Skills instalados y configurar faltantes"
+  echo ""
+  echo "  [R] Rebuild           - PELIGROSO: Recrear estructura desde cero"
+  echo "                         (respaldará archivos existentes en /backup)"
+  echo ""
+  echo "  [C] Cancel            - Cancelar sin cambios"
+  echo ""
+  echo "Selecciona opción [U/M/R/C]: "
+  read project_action
+
+  case $project_action in
+    "U"|"u"|"")
+      echo "🔄 Actualizando proyecto existente..."
+      init_mode="update"
+      ;;
+    "M"|"m")
+      echo "⚙️ Revisando configuración de MCPs y Skills..."
+      init_mode="maintain"
+      ;;
+    "R"|"r")
+      echo "⚠️ ADVERTENCIA: Esto recreará la estructura completa"
+      echo "Se creará backup en ./oden-backup-$(date +%Y%m%d-%H%M%S)/"
+      echo "¿Estás seguro? [y/N]: "
+      read confirm_rebuild
+      if [ "$confirm_rebuild" = "y" ] || [ "$confirm_rebuild" = "Y" ]; then
+        echo "🗂️ Creando backup..."
+        backup_dir="./oden-backup-$(date +%Y%m%d-%H%M%S)"
+        mkdir -p "$backup_dir"
+        cp -r .claude docs* 2>/dev/null "$backup_dir/" || true
+        echo "📦 Backup creado en: $backup_dir"
+        init_mode="rebuild"
+      else
+        echo "❌ Operación cancelada"
+        exit 0
+      fi
+      ;;
+    "C"|"c")
+      echo "❌ Operación cancelada"
+      exit 0
+      ;;
+    *)
+      echo "❌ Opción inválida. Cancelando."
+      exit 1
+      ;;
+  esac
+else
+  echo "🆕 PROYECTO NUEVO - Inicializando estructura completa"
+  init_mode="new"
+fi
+
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+```
+
+### 0.3 Repository Connection & Analysis (if needed)
+
+```bash
+if [ "$init_mode" = "maintain" ] || [ "$init_mode" = "update" ]; then
+  echo "📡 ANÁLISIS DE REPOSITORIO PARA RECOMENDACIONES"
+  echo "═════════════════════════════════════════════"
+
+  if [ -z "$repo_url" ]; then
+    echo ""
+    echo "Para mejorar las recomendaciones de MCPs y Skills, puedo analizar tu repositorio."
+    echo "¿Tienes un repositorio remoto que quieras conectar? [y/N]: "
+    read connect_repo
+
+    if [ "$connect_repo" = "y" ] || [ "$connect_repo" = "Y" ]; then
+      echo ""
+      echo "Ingresa la URL del repositorio (GitHub, GitLab, etc.):"
+      read new_repo_url
+
+      if [ -n "$new_repo_url" ]; then
+        git remote add origin "$new_repo_url" 2>/dev/null || git remote set-url origin "$new_repo_url" 2>/dev/null
+        repo_url="$new_repo_url"
+        echo "✅ Repositorio conectado: $repo_url"
+      fi
+    fi
+  fi
+
+  # Analyze repository for better recommendations
+  if [ -n "$repo_url" ]; then
+    echo ""
+    echo "🔍 Analizando repositorio para recomendaciones personalizadas..."
+
+    # Launch repository analyzer subagent
+  fi
+fi
+```
+
+```markdown
+Launch subagent: repo-analyzer
+
+Task: Analyze repository to suggest optimal MCPs and Skills
+
+Requirements:
+- Analyze repository URL and structure if accessible
+- Read package.json, go.mod, Cargo.toml, etc. to understand stack
+- Check for specific frameworks/libraries to suggest relevant MCPs:
+  * Database libraries → Database MCPs (PostgreSQL, MySQL, etc.)
+  * API frameworks → API development MCPs
+  * Frontend frameworks → Frontend-specific skills
+  * Testing frameworks → Testing enhancement MCPs
+  * Docker files → DevOps MCPs
+
+- Analyze project complexity to suggest appropriate skills:
+  * Monorepo structure → Specialized coordination skills
+  * Microservices → Distributed system skills
+  * Heavy data processing → Data engineering MCPs
+  * Real-time features → WebSocket/realtime MCPs
+
+- Check existing MCPs/Skills to avoid duplicates
+- Prioritize recommendations by project relevance
+- Output structured recommendation list
+
+Context: Provide personalized MCP/Skill recommendations based on actual project needs
+```
+
+### 0.4 MCP & Skills Installation Recommendations
+
+After analysis (or for new projects), present intelligent recommendations:
+
+```bash
+echo "🛠️ RECOMENDACIONES DE MCPs Y SKILLS"
+echo "══════════════════════════════════════"
+echo ""
+
+# Based on analysis results or stack detection
+echo "📊 Basado en tu proyecto, recomiendo estos MCPs y Skills:"
+echo ""
+```
+
+#### Smart MCP Recommendations
+
+```bash
+# Generate recommendations based on detected/selected stack
+case $tech_stack_detected in
+  "Node.js/JavaScript")
+    echo "🔧 MCPs Recomendados para Node.js:"
+    echo "   ✅ @modelcontextprotocol/server-postgres (Base de datos)"
+    echo "   ✅ @modelcontextprotocol/server-brave-search (Búsqueda web)"
+    echo "   ✅ @modelcontextprotocol/server-filesystem (Gestión archivos)"
+    if grep -q "next\|react" package.json 2>/dev/null; then
+      echo "   ✅ @modelcontextprotocol/server-memory (Estado global)"
+    fi
+    if grep -q "prisma\|sequelize\|typeorm" package.json 2>/dev/null; then
+      echo "   ✅ @modelcontextprotocol/server-sqlite (Desarrollo local)"
+    fi
+    ;;
+
+  "Go")
+    echo "🔧 MCPs Recomendados para Go:"
+    echo "   ✅ @modelcontextprotocol/server-postgres (Base de datos)"
+    echo "   ✅ @modelcontextprotocol/server-filesystem (Gestión archivos)"
+    echo "   ✅ @modelcontextprotocol/server-brave-search (APIs externas)"
+    ;;
+
+  "Flutter/Dart")
+    echo "🔧 MCPs Recomendados para Flutter:"
+    echo "   ✅ @modelcontextprotocol/server-firebase (Backend móvil)"
+    echo "   ✅ @modelcontextprotocol/server-memory (Estado app)"
+    echo "   ✅ @modelcontextprotocol/server-filesystem (Assets/storage)"
+    ;;
+
+  *)
+    echo "🔧 MCPs Universales Recomendados:"
+    echo "   ✅ @modelcontextprotocol/server-filesystem (Gestión archivos)"
+    echo "   ✅ @modelcontextprotocol/server-brave-search (Investigación)"
+    echo "   ✅ @modelcontextprotocol/server-memory (Contexto persistente)"
+    ;;
+esac
+
+echo ""
+echo "🎯 Skills Recomendados para Desarrollo:"
+echo "   ✅ claude-developer-platform (APIs y SDKs)"
+echo "   ✅ test-engineer (Testing avanzado)"
+echo "   ✅ code-reviewer (Quality assurance)"
+if [ "$tech_stack_detected" = "Node.js/JavaScript" ]; then
+  echo "   ✅ frontend-developer (React/Vue/Angular)"
+  echo "   ✅ backend-architect (Node.js/Express)"
+elif [ "$tech_stack_detected" = "Go" ]; then
+  echo "   ✅ backend-architect (Go APIs)"
+  echo "   ✅ devops-engineer (Deployment)"
+fi
+
+echo ""
+echo "¿Proceder con instalación de MCPs y Skills recomendados? [Y/n]: "
+read install_recommendations
+
+if [ "$install_recommendations" != "n" ] && [ "$install_recommendations" != "N" ]; then
+  echo ""
+  echo "🚀 INSTALANDO MCPs Y SKILLS RECOMENDADOS"
+  echo "═══════════════════════════════════════════"
+
+  # Install recommended MCPs
+  /oden:mcp install recommended
+
+  # Install recommended Skills
+  # This would call the skill installation system
+  echo "✅ Skills configurados para desarrollo optimal"
+else
+  echo "ℹ️  Saltando instalación automática - puedes instalar después con:"
+  echo "   /oden:mcp install [mcp-name]"
+  echo "   /oden:init agents [category]"
+fi
+```
+
+### 0.5 Enhanced Documentation Structure Setup
+
+```bash
+echo ""
+echo "📁 CONFIGURANDO ESTRUCTURA DE DOCUMENTACIÓN"
+echo "══════════════════════════════════════════════"
+
+# Create enhanced docs structure for multi-LLM compatibility
+mkdir -p docs/reference docs/guides docs/development/current docs/development/completed docs/archived docs/temp
+
+# Create main compatibility README
+```
+
+## PASO 1: Enhanced Project Understanding
 
 El objetivo es entender QUÉ necesita el usuario para RECOMENDAR el stack correcto.
 

@@ -247,26 +247,73 @@ Tasks:
 - **Blocked by:** [what this epic blocks]
 ```
 
-## 📈 Quality Checks & Output
+## 📊 Automatic Technical Validation
 
-Before completion, verify:
+**CRITICAL**: Every Epic gets automatic technical validation for implementation readiness.
+
+After Epic creation, **automatically execute technical validation**:
+
+```bash
+echo ""
+echo "🔍 Running automatic Epic technical validation..."
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+# Launch automatic technical validation
+/oden:epic-validate $ARGUMENTS
+```
+
+### Technical Quality Gates (Must Pass Before Task Creation)
+
+**Validation executes 3 specialized subagents:**
+- ✅ **Technical Viability Auditor**: All tasks implementable with current stack
+- ✅ **Dependency Validator**: No circular dependencies, optimal parallelization
+- ✅ **Architecture Coherence Checker**: Aligns with existing technical decisions
+- ✅ **Testability Analyzer**: All acceptance criteria can be automated
+
+**Minimum Standards for IMPLEMENTATION_READY:**
+- Technical Viability ≥85%: All tasks are implementable
+- Dependencies ≥80%: No circular dependencies, logical flow
+- Architecture ≥85%: Coherent with technical-decisions.md
+- Testability ≥80%: Acceptance criteria testable
+- **Overall ≥85%**: Ready for parallel development
+
+### If Technical Validation Fails
+```bash
+# Score 60-84% (Needs Fixes)
+echo "⚠️ Epic has technical issues. Running auto-fix..."
+/oden:epic-validate $ARGUMENTS --auto-fix
+
+# Score <60% (Major Rework)
+echo "❌ Epic requires architectural redesign"
+echo "Consider: /oden:epic $ARGUMENTS --redesign"
+```
+
+### Pre-Development Quality Verification
+Before completion, automatically verify:
 - [ ] Every PRD requirement mapped to ≥1 task
 - [ ] No orphan tasks (all trace to requirements)
 - [ ] Dependencies are logical (no circular refs)
 - [ ] Parallel streams don't conflict on files
 - [ ] Task sizes sum to reasonable total (≤2-3 weeks)
 - [ ] Acceptance criteria are testable
-- [ ] Subagent insights properly synthesized
+- [ ] Architecture aligns with existing technical decisions
 
 ## Success Output
 
 ```
-🎉 Epic created with optimized context usage: .claude/epics/$ARGUMENTS/epic.md
+🎉 Epic Created & Validated: .claude/epics/$ARGUMENTS/epic.md
 
 📊 Orchestration Summary:
   Phase 1: 3 parallel subagents (analysis) ✅
   Phase 2: 2 sequential subagents (planning) ✅
   Phase 3: Main assembly (synthesis) ✅
+
+🔍 Automatic Technical Validation:
+  Overall Readiness: [XX]% ([IMPLEMENTATION_READY/NEEDS_FIXES/MAJOR_REWORK])
+  └─ Technical Viability: [XX]% - [status]
+  └─ Dependencies: [XX]% - [status]
+  └─ Architecture: [XX]% - [status]
+  └─ Testability: [XX]% - [status]
 
 📋 Epic Summary:
   - [total] tasks across [stream_count] work streams
@@ -275,16 +322,27 @@ Before completion, verify:
   - [parallel_count] tasks can run simultaneously
   - Agent types assigned for optimal specialization
 
-💡 Context Optimization:
-  - Previous: ~15,000+ tokens in single session
-  - Current: ~3,000-5,000 tokens per phase
-  - Subagent reuse: technical context preserved across phases
-  - Recovery: Each phase saves state independently
+🚀 Development Confidence:
+  - Implementation readiness: [XX]%
+  - On-time delivery probability: [XX]%
+  - Technical risk: [LOW/MEDIUM/HIGH]
+  - Parallel development conflicts: [count] potential issues
 
-Next Steps:
-  1. Review epic document for completeness
-  2. Run: /oden:tasks $ARGUMENTS (creates individual task files)
-  3. Run: /oden:sync $ARGUMENTS (pushes to GitHub Issues)
+💡 Quality Assurance:
+  - Enterprise-ready: [Y/N] (based on validation score)
+  - Development-ready: [Y/N] (≥85% overall readiness)
+  - Auto-fixes applied: [count] technical improvements
+  - Critical issues: [count] requiring manual attention
+
+🎯 Next Steps:
+  [If READY ≥85%]: ✅ Proceed - Run `/oden:tasks $ARGUMENTS`
+  [If FIXES]: ⚠️ Fix issues first - Run `/oden:epic-validate $ARGUMENTS`
+  [If REWORK]: ❌ Redesign needed - Consider `/oden:epic $ARGUMENTS --redesign`
+
+📋 Deliverables:
+  - Epic document: .claude/epics/$ARGUMENTS/epic.md
+  - Validation report: .claude/epics/$ARGUMENTS/epic-validation.md
+  - Implementation readiness: [XX]% technical confidence
 ```
 
 ## 🔧 Implementation Notes
