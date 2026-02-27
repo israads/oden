@@ -35,16 +35,12 @@ Topics disponibles:
 ║  COMANDOS DISPONIBLES                                        ║
 ║                                                              ║
 ║  Setup:                                                      ║
-║  ├─ /oden:init         Wizard para crear proyecto            ║
-║  ├─ /oden:init-agents  Instalar agentes de desarrollo        ║
-║  ├─ /oden:init-mcp     Instalar MCPs recomendados            ║
+║  ├─ /oden:init         Wizard para crear proyecto con MCP/Skills║
 ║  ├─ /oden:mcp [sub]    Gestionar MCPs (install/status/etc)   ║
 ║  └─ /oden:help         Esta ayuda                            ║
 ║                                                              ║
 ║  Pre-Desarrollo (ejecutar en orden):                         ║
-║  ├─ /oden:architect    Technical decisions + DB schema       ║
-║  ├─ /oden:spec [mod]   Especificación de módulo              ║
-║  └─ /oden:checklist    Verificar todo listo                  ║
+║  └─ /oden:architect    Technical decisions + DB schema       ║
 ║                                                              ║
 ║  Feature Pipeline (nativo + validación automática):          ║
 ║  ├─ /oden:prd [name]        Crear PRD + validación auto     ║
@@ -55,27 +51,25 @@ Topics disponibles:
 ║  └─ /oden:sync [sub]        Sincronizar con GitHub Issues   ║
 ║                                                              ║
 ║  Durante Desarrollo:                                         ║
-║  ├─ /oden:work [epic]  Orquestador con Teams (auto/config)   ║
-║  ├─ /oden:test [sub]   Testing                               ║
-║  ├─ /oden:debug [sub]  Debugging                             ║
-║  ├─ /oden:git [sub]    Git workflow                          ║
-║  ├─ /oden:review       Code review antes de merge            ║
-║  ├─ /oden:research     Investigación técnica                 ║
-║  └─ /oden:daily        Registrar progreso del día            ║
+║  ├─ /oden:work [epic]       Orquestador con Teams + validation ║
+║  ├─ /oden:test <module>     Generate tests para módulo      ║
+║  ├─ /oden:test run          Execute tests + auto-fix        ║
+║  ├─ /oden:test strategy     Crear estrategia testing        ║
+║  ├─ /oden:debug [sub]       Debugging con orquestación     ║
+║  ├─ /oden:git [sub]         Git workflow                    ║
+║  ├─ /oden:review            Code review antes de merge      ║
+║  ├─ /oden:research          Investigación técnica           ║
+║  └─ /oden:daily             Registrar progreso del día      ║
 ║                                                              ║
 ╠══════════════════════════════════════════════════════════════╣
 ║                                                              ║
 ║  FLUJO TÍPICO                                                ║
 ║                                                              ║
 ║  SETUP:                                                      ║
-║  /oden:init myproject      → Crear proyecto                  ║
-║  /oden:init-agents         → Instalar agentes                ║
-║  /oden:init-mcp            → Instalar MCPs                   ║
+║  /oden:init myproject      → Crear proyecto + MCPs/Skills    ║
 ║                                                              ║
 ║  PRE-DEV:                                                    ║
-║  /oden:architect           → Arquitectura                    ║
-║  /oden:spec auth           → Specs por módulo                ║
-║  /oden:checklist           → Verificar                       ║
+║  /oden:architect           → Arquitectura completa           ║
 ║                                                              ║
 ║  FEATURES (pipeline + validación automática):                ║
 ║  /oden:prd auth            → Crear PRD + auto-validar       ║
@@ -84,8 +78,9 @@ Topics disponibles:
 ║  /oden:sync auth           → Push a GitHub Issues            ║
 ║                                                              ║
 ║  DESARROLLO:                                                 ║
-║  /oden:work epic/auth      → Orquestador con Teams           ║
-║  /oden:test run            → Testing                         ║
+║  /oden:test auth           → Generate tests para módulo     ║
+║  /oden:work epic/auth      → Orquestador con Teams + validation ║
+║  /oden:test run            → Execute tests + auto-fix       ║
 ║  /oden:review branch       → Code review                     ║
 ║  /oden:daily               → Log diario                      ║
 ║  /oden:git pr              → Create PR                       ║
@@ -307,6 +302,26 @@ Topics disponibles:
 ║     • Proyecto pequeño: 4000+ líneas total                   ║
 ║     • Proyecto mediano: 8000+ líneas total                   ║
 ║     • Proyecto grande: 15000+ líneas total                   ║
+║                                                              ║
+║  ──────────────────────────────────────────────────────────  ║
+║                                                              ║
+║  P: ¿Cómo funciona la validación automática?                 ║
+║  ─────────────────────────────────────────                   ║
+║  R: Sistema de quality gates automático:                     ║
+║     • PRD Validation: ≥85% (completitud + consistencia)     ║
+║     • Epic Validation: ≥85% (viabilidad técnica)            ║
+║     • Auto-blocking: No procede si validation <85%          ║
+║     • Auto-fix: Corrige issues comunes automáticamente      ║
+║                                                              ║
+║  ──────────────────────────────────────────────────────────  ║
+║                                                              ║
+║  P: ¿Qué incluye el sistema de testing?                      ║
+║  ───────────────────────────────────────                     ║
+║  R: Testing completo con business logic:                     ║
+║     • Auto-generación desde specs y lógica de negocio       ║
+║     • Frameworks: Vitest, Jest, Cypress, Go, Rust, etc.     ║
+║     • Auto-fix: Corrige tests fallidos usando contexto      ║
+║     • Coverage: Focus en business value, no solo %          ║
 ║                                                              ║
 ╚══════════════════════════════════════════════════════════════╝
 ```
